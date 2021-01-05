@@ -52,7 +52,7 @@ public class InteractScript : MonoBehaviour
 
             StartCoroutine(_animate.CreateHypercube(Dimension));
 
-            octadecayotton.PlaySound(dimension > 9 ? "StartupHard" : "Startup");
+            octadecayotton.PlaySound(Dimension > 9 ? "StartupHard" : "Startup");
             octadecayotton.ModuleSelectable.AddInteractionPunch(16);
 
             Rotations = !Application.isEditor || octadecayotton.ForceRotation.IsNullOrEmpty()
@@ -75,10 +75,10 @@ public class InteractScript : MonoBehaviour
                 Dimension - 1);
             Debug.LogFormat("[The Octadecayotton #{0}]: Example full solution (not knowing axes) => {1}.",
                 _moduleId,
-                startingSphere.GetAnswer(AnchorSphere, _axesUsed, _order, true).Select(i => i.Join(dimension > 9 ? " " : "")).Join(", "));
+                startingSphere.GetAnswer(AnchorSphere, _axesUsed, _order, true).Select(i => i.Join(Dimension > 9 ? " " : "")).Join(", "));
             Debug.LogFormat("[The Octadecayotton #{0}]: Quickest solution (knowing axes) => {1}.",
                 _moduleId,
-                startingSphere.GetAnswer(AnchorSphere, _axesUsed, _order, false).Select(i => i.Join(dimension > 9 ? " " : "")).Join(", "));
+                startingSphere.GetAnswer(AnchorSphere, _axesUsed, _order, false).Select(i => i.Join(Dimension > 9 ? " " : "")).Join(", "));
 
             return true;
         };
@@ -154,19 +154,22 @@ public class InteractScript : MonoBehaviour
 
     private void CreateStartingSphere()
     {
-        _breakCount = 0;
-        _inputs = new List<Axis>();
-        startingSphere = new Dictionary<Axis, bool>();
-        _axesUsed = new Dictionary<Axis, int>();
-
-        for (int i = 0; i < Dimension; i++)
+        do
         {
-            startingSphere.Add(allAxies.ElementAt(i),
-                !Application.isEditor || _octadecayotton.ForceStartingSphere.IsNullOrEmpty()
-                ? Rnd.Range(0, 1f) > 0.5f
-                : _octadecayotton.ForceStartingSphere.Where(c => c == '-' || c == '+').ElementAtOrDefault(i) == '+');
-            _axesUsed.Add(allAxies.ElementAt(i), 0);
-        }
+            _breakCount = 0;
+            _inputs = new List<Axis>();
+            startingSphere = new Dictionary<Axis, bool>();
+            _axesUsed = new Dictionary<Axis, int>();
+
+            for (int i = 0; i < Dimension; i++)
+            {
+                startingSphere.Add(allAxies.ElementAt(i),
+                    !Application.isEditor || _octadecayotton.ForceStartingSphere.IsNullOrEmpty()
+                    ? Rnd.Range(0, 1f) > 0.5f
+                    : _octadecayotton.ForceStartingSphere.Where(c => c == '-' || c == '+').ElementAtOrDefault(i) == '+');
+                _axesUsed.Add(allAxies.ElementAt(i), 0);
+            }
+        } while (startingSphere.Select((a, n) => a.Value != AnchorSphere.ElementAt(n).Value).All(b => !b));
 
         _order = allAxies.Take(Dimension).ToArray().Shuffle().ToArray();
         Debug.LogFormat("[The Octadecayotton #{0}]: The axes (from 0 to {1}) for the last digits of the timer is {2}.",

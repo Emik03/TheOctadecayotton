@@ -66,7 +66,7 @@ namespace TheOctadecayotton
                 if (settings != null)
                 {
                     dimension = Mathf.Clamp(settings.Dimension, 3, 12);
-                    rotation = Mathf.Clamp(settings.Rotation, 1, 100);
+                    rotation = Mathf.Clamp(settings.Rotation, 0, 100);
                     stepRequired = settings.LowFPS.AsInt() + 1;
                     isUsingBounce = settings.IsUsingBounce;
                     stretchToFit = settings.StretchToFit;

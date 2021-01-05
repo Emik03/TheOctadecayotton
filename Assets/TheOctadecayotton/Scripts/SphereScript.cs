@@ -38,7 +38,7 @@ public class SphereScript : MonoBehaviour
         yield return new WaitForSeconds(0.04f);
         _isUpdating = false;
 
-        Light.range = transform.localScale.x / 256;
+        Light.range = transform.localScale.x / 128;
         bool white = true;
 
         for (int i = 0; i < Interact.Dimension; i++)

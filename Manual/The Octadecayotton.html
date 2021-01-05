@@ -603,6 +603,7 @@
         </div>
     </div>
     <script>
+        // I am so sorry for this code. I have commited too many sins here. At the very least I didn't use 'var'.
         const dimension = document.getElementById('dimensions');
         const diagrams = document.querySelectorAll('.diagram');
         const horizontalSeparators = document.querySelectorAll('.horizontal-separator');
@@ -678,7 +679,7 @@
             for (let i = 0; i < dimaStart.length; i++)
                 dimaStart[i].innerHTML = ['"000"', '"0000"', '"00000"', '"000000"', '"0000000"', '"00000000"', '"000000000"', '"0000000000"', '"00000000000"', '"000000000000"', ][index];
             for (let i = 0; i < dima0Check.length; i++)
-                dima0Check[i].innerHTML = ['2<sup>nd</sup>', '2<sup>nd</sup>', '3<sup>rd</sup>', '3<sup>rd</sup>', '4<sup>th</sup>', '4<sup>th</sup>', '5<sup>th</sup>', '5<sup>th</sup>', '6<sup>th</sup>', '6<sup>th</sup>'][index];
+                dima0Check[i].innerHTML = ['2<sup>nd</sup>', '3<sup>rd</sup>', '3<sup>rd</sup>', '4<sup>th</sup>', '4<sup>th</sup>', '5<sup>th</sup>', '5<sup>th</sup>', '6<sup>th</sup>', '6<sup>th</sup>', '7<sup>th</sup>'][index];
             for (let i = 0; i < dima0Set.length; i++)
                 dima0Set[i].innerHTML = ['set the 1<sup>st</sup> digit', 'set the 1<sup>st</sup> digit', 'set the 1<sup>st</sup> digit', 'set the 1<sup>st</sup> and 2<sup>nd</sup> digits', 'set the 1<sup>st</sup> and 2<sup>nd</sup> digits', 'set the 1<sup>st</sup> and 2<sup>nd</sup> digits', 'set the 1<sup>st</sup>, 2<sup>nd</sup>, and 3<sup>rd</sup> digits', 'set the 1<sup>st</sup>, 2<sup>nd</sup>, and 3<sup>rd</sup> digits', 'set the 1<sup>st</sup>, 2<sup>nd</sup>, and 3<sup>rd</sup> digits', 'set the 1<sup>st</sup>, 2<sup>nd</sup>, 3<sup>rd</sup>, and 4<sup>th</sup> digits'][index];
             for (let i = 0; i < dima0Set2.length; i++)
