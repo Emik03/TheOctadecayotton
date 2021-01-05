@@ -100,9 +100,19 @@ namespace TheOctadecayotton
             foreach (var sphere in _interact.Spheres)
                 sphere.UpdateColor();
 
+            bool shortTime = false;
+            if (_octadecayotton.Info.GetTime() < 120)
+            {
+                shortTime = true;
+                _octadecayotton.Module.HandlePass();
+            }
+
             yield return ExpandSpheres(-4, 1 / 256f);
             yield return ShuffleSpheres(1 / 1024f);
+
+            if (!shortTime)
             _octadecayotton.Module.HandlePass();
+
             yield return DestroyHypercube();
         }
 

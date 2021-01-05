@@ -28,9 +28,9 @@ internal class Position
     internal static readonly float[,] weights =
     {
         { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
-        { 0.5f, 0.8f, 0.2f }, { 0.2f, 0.5f, 0.8f }, { 0.8f, 0.2f, 0.5f },
+        { 0.8f, 0.2f, 0.5f }, { 0.2f, 0.5f, 0.8f }, { 0.5f, 0.8f, 0.2f },
         { 2, 0.125f, 0.125f }, { 0.125f, 0.125f, 2, }, { 0.125f, 2, 0.125f },
-        { 0.125f, 0.05f, 3.2f }, { 0.05f, 3.2f, 0.125f, }, { 3.2f, 0.125f, 0.05f },
+        { 0.125f, 0.05f, 3.2f }, { 0.05f, 3.2f, 0.125f, }, { 3.2f, 0.125f, 0.05f }
     };
 
     internal bool[] InitialPosition { get; private set; }

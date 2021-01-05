@@ -128,10 +128,13 @@ public class InteractScript : MonoBehaviour
         if (!isActive || !isRotating || ++_step % _stepRequired != 0)
             return;
 
+        if (Rotations.Length == 0)
+            isSubmitting = true;
+
         if (rotationProgress >= Rotations.Length + 0.4f)
             rotationProgress = 0;
 
-        if (rotationProgress < Rotations.Length)
+        if (rotationProgress < Rotations.Length || Rotations.Length == 0)
         {
             if (rotationProgress % 1 == 0)
             {
@@ -141,7 +144,7 @@ public class InteractScript : MonoBehaviour
                     isRotating = false;
                 }
 
-                for (int i = 0; i < Spheres.Count; i++)
+                for (int i = 0; i < Spheres.Count && Rotations.Length != 0; i++)
                     Spheres[i].pos.SetRotation(Rotations[(int)rotationProgress]);
             }
 
