@@ -1,0 +1,553 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>The Octadecayotton — Keep Talking and Nobody Explodes Module</title>
+    <meta name="viewport" content="initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/font.css">
+    <script src="js/ktane-utils.js"></script>
+    <style>
+        @media screen and (min-width: 900px) {
+            body {
+                background: 
+                    linear-gradient(#333, #333),
+                    url('img/web-background.jpg');
+                background-size: cover;
+                background-blend-mode: multiply;
+            }
+        }
+
+        .corner {
+            visibility: hidden;
+        }
+
+        .corner {
+            visibility: hidden;
+        }
+
+        .odd {
+            background-color: #ccc;
+        }
+
+        .vertical-separator {
+            background-color:white;
+        }
+
+        .horizontal-separator {
+            background-color:white; 
+            padding: 4px;
+        }
+
+        .page {
+            filter:invert(0.8);
+            color: black;
+            font-weight: bold;
+        }
+
+        .flavour-text {
+            -webkit-animation: chromatic-aberration 5s both infinite;
+            animation: chromatic-aberration 5s both infinite;
+        }
+      
+        @-webkit-keyframes chromatic-aberration {
+            0% {
+                text-shadow:1px 1px 0px cyan, -1px -1px 0 red;
+            }
+            50% {
+                text-shadow:1px 1px 0px lime, -1px -1px 0 magenta;
+            }
+            100% {
+                text-shadow:1px 1px 0px cyan, -1px -1px 0 red;
+            }
+        }
+      
+        @keyframes chromatic-aberration {
+            0% {
+                text-shadow:1px 1px 0px cyan, -1px -1px 0 red;
+            }
+            50% {
+                text-shadow:1px 1px 0px lime, -1px -1px 0 magenta;
+            }
+            100% {
+                text-shadow:1px 1px 0px cyan, -1px -1px 0 red;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <div class="page page-bg-01">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">The Octadecayotton</span>
+            </div>
+            <div class="page-content">
+                <img src="img/Component/The Octadecayotton.svg" class="diagram">
+                <h2>On the Subject of The Octadecayotton</h2>
+                <p class="flavour-text">who'll be there when i'm gone?</p>
+                <p>The module's appearance is initially blank. Select the module to reveal a 9-dimensional cube represented in 512 spheres.</p>
+                <p>These spheres will start moving, resembling the rotations of a 9-dimensional cube. 3 rotations are shown, followed by a brief pause to indicate the end of its sequence.</p>
+                <p>Whenever D is mentioned, it refers to the amount of dimensions there are. Usually this is 9 (as the module's name implies), but can vary with mod settings.</p>
+                <h3>Identifying Dimensions</h3>
+                <ul>
+                    <li>There are 9 dimensions: X, Y, Z, U, V, W, R, S, and T. Each axis can either be positive, or negative.</li>
+                    <li>Any positive axis points to the right (+X), up (+Z), and/or towards (+Y) the viewer when viewed from the front.</li> 
+                    <li>Any negative axis points to the left (-X), down (-Z), and/or away (-Y) the viewer when viewed from the front.</li> 
+                    <li>Any given sphere has 9 neighbours, which are all 1 of each of the 9 axes, either positively or negatively.</li>
+                </ul>
+                <img src="img/Component/Axes.svg" class="diagram">
+                <ul>
+                    <li>To the diagram to the right shows on example of a sphere's 9 neighbours as seen from the front. The unfilled spheres are neighbours of the filled sphere.</li>
+                    <li>In reading order (left-to-right then top-to-bottom), the spheres are S, Z, V, W, U, T, R, Y (stacked on top of the filled sphere), and X.</li>
+                    <li>In this example, going from the filled sphere to any unfilled is a positive axis, while going from an unfilled sphere to the filled sphere is a negative axis.</li>
+                </ul>
+                <h3>Identifying Rotations</h3>
+                <ul>
+                    <li>Look at 2 spheres that are neighbours (note down their initial axis that connects them together) and watch them transform.</li>
+                    <li>If these 2 spheres are now neighboured from a different axis, that implies a rotation. Record the new axis that they transformed into, and repeat this process starting with the new axis until the first initial axis is reached.</li>
+                    <li>For any negative initial axis, invert both the initial and new axis. (positive -> negative, negative -> positive)</li>
+                </ul>
+            </div>
+            <div class="page-footer relative-footer">Page 1 of 7</div>
+        </div>
+        <div class="page page-bg-02">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">The Octadecayotton</span>
+            </div>
+            <div class="page-content">
+                <h3>Identifying Rotations (...continued)</h3>
+                <ul>
+                    <li>When the first initial axis has been reached, start from the bottom of the list, and working your way up; append all the new axes to a separate list.</li>
+                    <li>The resulting list is called a subrotation. In a given rotation there can be multiple simulatenous subrotations happening at the same time.</li>
+                </ul>
+                <h3>Primary Values</h3>
+                <ul>
+                    <li>All rotations and subrotations have a primary value. Within each subrotation, create a list of every possible pair of axes from their neighbours. (including the last and first axis as a pair*)</li>
+                    <li>If the subrotation contains exactly 1 axis, ignore the above rule and make only 1 pair, consisting of the axis, and the positive version of that axis.</li>
+                    <li>For each pair, get the value from the table, using the first letter as the column and the second letter as the row.</li>
+                </ul>
+                <p><sup><i>* Even with 2 axes, this rule still applies. For example, subrotation +R-T gives -RT and -TR.</i></sup></p>
+                <table align="center">
+                    <tr>
+                        <th class="corner" rowspan="2" colspan="2"></th>
+                        <th class="odd">X</th>
+                        <th class="odd">Y</th>
+                        <th class="odd">Z</th>
+                        <th class="odd">U</th>
+                        <th class="odd">V</th>
+                        <th class="odd">W</th>
+                        <th class="odd">R</th>
+                        <th class="odd">S</th>
+                        <th class="odd">T</th>
+                    </tr>
+                    <tr>
+                        <th colspan="9" class="vertical-separator"></th>
+                    </tr>
+                    <tr>
+                        <th>X</th>
+                        <th rowspan="9" class="horizontal-separator"></th>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <th rowspan="9" class="horizontal-separator"></th>
+                        <th>X</th>
+                    </tr>
+                    <tr>
+                        <th class="odd">Y</th>
+                        <td class="odd">9</td>
+                        <td class="odd">1</td>
+                        <td class="odd">2</td>
+                        <td class="odd">3</td>
+                        <td class="odd">4</td>
+                        <td class="odd">5</td>
+                        <td class="odd">6</td>
+                        <td class="odd">7</td>
+                        <td class="odd">8</td>
+                        <th class="odd">Y</th>
+                    </tr>
+                    <tr>
+                        <th>Z</th>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <th>Z</th>
+                    </tr>
+                    <tr>
+                        <th class="odd">U</th>
+                        <td class="odd">7</td>
+                        <td class="odd">8</td>
+                        <td class="odd">9</td>
+                        <td class="odd">1</td>
+                        <td class="odd">2</td>
+                        <td class="odd">3</td>
+                        <td class="odd">4</td>
+                        <td class="odd">5</td>
+                        <td class="odd">6</td>
+                        <th class="odd">U</th>
+                    </tr>
+                    <tr>
+                        <th>V</th>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <th>V</th>
+                    </tr>
+                    <tr>
+                        <th class="odd">W</th>
+                        <td class="odd">5</td>
+                        <td class="odd">6</td>
+                        <td class="odd">7</td>
+                        <td class="odd">8</td>
+                        <td class="odd">9</td>
+                        <td class="odd">1</td>
+                        <td class="odd">2</td>
+                        <td class="odd">3</td>
+                        <td class="odd">4</td>
+                        <th class="odd">W</th>
+                    </tr>
+                    <tr>
+                        <th>R</th>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <th>R</th>
+                    </tr>
+                    <tr>
+                        <th class="odd">S</th>
+                        <td class="odd">3</td>
+                        <td class="odd">4</td>
+                        <td class="odd">5</td>
+                        <td class="odd">6</td>
+                        <td class="odd">7</td>
+                        <td class="odd">8</td>
+                        <td class="odd">9</td>
+                        <td class="odd">1</td>
+                        <td class="odd">2</td>
+                        <th class="odd">S</th>
+                    </tr>
+                    <tr>
+                        <th>T</th>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>1</td>
+                        <th>T</th>
+                    </tr>
+                    <tr>
+                        <th class="corner" rowspan="2" colspan="2"></th>
+                        <th colspan="9" class="vertical-separator"></th>
+                    </tr>
+                    <tr>
+                        <th class="odd">X</th>
+                        <th class="odd">Y</th>
+                        <th class="odd">Z</th>
+                        <th class="odd">U</th>
+                        <th class="odd">V</th>
+                        <th class="odd">W</th>
+                        <th class="odd">R</th>
+                        <th class="odd">S</th>
+                        <th class="odd">T</th>
+                    </tr>
+                </table>
+                <ul>
+                    <li>If 1 of the 2 axes are negative, multiply the pair's result with -1.</li>
+                    <li>The sum of all pairs is the primary value of the subrotation. The sum of all subrotations in 1 rotation is the primary value of that rotation.</li>
+                    <li>Later in this manual, whenever p<sub>1</sub>, p<sub>2</sub>, or p<sub>3</sub> is mentioned, it refers to the primary value of the 1<sup>st</sup>, 2<sup>nd</sup>, and 3<sup>rd</sup> rotation respectively.</li>
+                </ul>
+            </div>
+            <div class="page-footer relative-footer">Page 2 of 7</div>
+        </div>
+        <div class="page page-bg-03">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">The Octadecayotton</span>
+            </div>
+            <div class="page-content">
+                <h3>The First Rotation</h3>
+                <ul>
+                    <li>ideas</li>
+                </ul>
+                <p></p>
+            </div>
+            <div class="page-footer relative-footer">Page 3 of 7</div>
+        </div>
+        <div class="page page-bg-04">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">The Octadecayotton</span>
+            </div>
+            <div class="page-content">
+                <h3>The Second Rotation</h3>
+                <ul>
+                    <li>The second rotation will always be 1 subrotation that includes all axes.</li>
+                    <li>Get an axis from "Number &lt;-&gt; Axis" with the input being p<sub>2</sub> modulo* D.</li>
+                    <li>Reorganise the subrotation such that the received axis is the first element of the list.</li>
+                    <li>Since every axis is positive or negative, this means that the rotation can also point to 1 sphere that shares all negative/positive values of the rotation. This is called the starting sphere.</li>
+                </ul>
+                <p><sup><i>* Modulo is to add/subtract the right number until the left is non-negative, and less than the right.</i></sup></p>
+                <table align="center">
+                    <tr>
+                        <th class="odd">Number &lt;-&gt; Axis</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table align="center">
+                                <tr>
+                                    <th colspan="2" class="odd">Number</th>
+                                    <td class="odd">0</td>
+                                    <td class="odd">1</td>
+                                    <td class="odd">2</td>
+                                    <td class="odd">3</td>
+                                    <td class="odd">4</td>
+                                    <td class="odd">5</td>
+                                    <td class="odd">6</td>
+                                    <td class="odd">7</td>
+                                    <td class="odd">8</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Axis</th>
+                                    <td>X</td>
+                                    <td>Y</td>
+                                    <td>Z</td>
+                                    <td>U</td>
+                                    <td>V</td>
+                                    <td>W</td>
+                                    <td>R</td>
+                                    <td>S</td>
+                                    <td>T</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <h3>The Binary Logic Gate</h3>
+                <ul>
+                    <li>To get the output of a given sphere, reorder the axes to be the starting sphere, and convert it to gray code by appending a 1 on positions where the starting sphere and the sphere to calculate have the same positive/negative value, and 0 otherwise. Convert it to binary:</li>
+                    <ol>
+                        <li>The first binary digit will match the first digit of the gray code.</li>
+                        <li>The next digit is a 1 if the sum of the previous digit of the gray code and the current position's binary code is exactly 1. Otherwise it's a 0.</li>
+                        <li>Repeat step 2 until D digits are obtained. This is the binary code.</li>
+                    </ol>
+                    <li>Convert the binary code to decimal by adding up all the numbers on the below table's "Decimal" only if the corresponding position in "Binary" is 1.</li>
+                </ul>
+                <table align="center">
+                    <tr>
+                        <th class="odd">Binary to Decimal</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table align="center">
+                                <tr>
+                                    <th colspan="2" class="odd">Binary (Xth from the right)</th>
+                                    <td class="odd">9<sup>st</sup></td>
+                                    <td class="odd">8<sup>nd</sup></td>
+                                    <td class="odd">7<sup>rd</sup></td>
+                                    <td class="odd">6<sup>th</sup></td>
+                                    <td class="odd">5<sup>th</sup></td>
+                                    <td class="odd">4<sup>th</sup></td>
+                                    <td class="odd">3<sup>rd</sup></td>
+                                    <td class="odd">2<sup>nd</sup></td>
+                                    <td class="odd">1<sup>st</sup></td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Decimal</th>
+                                    <td>256</td>
+                                    <td>128</td>
+                                    <td>64</td>
+                                    <td>32</td>
+                                    <td>16</td>
+                                    <td>8</td>
+                                    <td>4</td>
+                                    <td>2</td>
+                                    <td>1</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <ul>
+                    <li>Add the decimal number with p<sub>2</sub>, then take modulo 9. Starting from 0 and on the leftmost axis of the second rotation's subrotation, go right 1 axis until the number obtained is reached.</li>
+                    <li>The current axis' positivity/negativity is the output. </li>
+                </ul>
+            </div>
+            <div class="page-footer relative-footer">Page 4 of 7</div>
+        </div>
+        <div class="page page-bg-05">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">The Octadecayotton</span>
+            </div>
+            <div class="page-content">
+                <h3>The Third Rotation</h3>
+                <ul>
+                    <li>The third rotation will always includes all axes across subrotations.</li>
+                    <li>Each subrotation has a secondary value. Construct a function using the following rules, then calculate the function to get the secondary value. All conditions must be followed, even after a condition is true.</li>
+                    <ol>
+                        <li>Start with the primary value multipled by -1 of the subrotation.</li>
+                        <li>If the subrotation contains exactly 1 of X, Y, and Z: Add D<sup>2</sup>.</li>
+                        <li>If the subrotation is 3 axes long: Add the sum of those axes by converting each one with "Number &lt;-&gt; Axis".</li>
+                        <li>If the subrotation has equal amounts of positive and negative axes: Add the amount of axes of the subrotation.</li>
+                        <li>If the subrotation connects any of +X, +W and +R: Subtract 1.</li>
+                        <li>If the subrotation connects any of +Y, +U and +T: Subtract 10.</li>
+                        <li>If the subrotation connects any of +Z, +V and +S: Subtract 100.</li>
+                        <li>If the amount of axes of the subrotation is unique within the third rotation: Add D plus 2.</li>
+                        <li>If the amount of negative axes in the subrotation is equal to the amount of subrotations in the third rotation: Add the amount of subrotations multiplied by D.</li>
+                        <li>If the first rotation's combined subrotations points to a sphere that returns positive (+) on the logic gate: Add all axes not included in the first rotation from "Number &lt;-&gt; Axis".</li>
+                        <li>If the starting sphere from the second rotation points to a sphere that returns positive (+) on the logic gate: Add the last axis's value from "Number &lt;-&gt; Axis".</li>
+                        <li>If the third rotation's combined subrotations points to a sphere that returns positive (+) on the logic gate: Add all axes in the third rotation who are alone in a subrotation from "Number &lt;-&gt; Axis".</li>
+                    </ol>
+                </ul>
+                <h3>Variables</h3>
+                <ul>
+                    <li>D = the amount of dimensions there are.</li>
+                    <li>p<sub>x</sub> = the primary value of x.</li>
+                    <li>s<sub>x</sub> = the secondary value of x.</li>
+                    <li>a<sub>x</sub> = the amount of axes x has.</li>
+                    <li>t<sub>x</sub> = the amount of conditions used for function x, including the first.</li>
+                    <li>f<sub>x</sub>(y) = the function that was used to get s<sub>x</sub>, replacing primary values with y.</li>
+                </ul>
+            </div>
+            <div class="page-footer relative-footer">Page 5 of 7</div>
+        </div>
+        <div class="page page-bg-06">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">The Octadecayotton</span>
+            </div>
+            <div class="page-content">
+                <ul>
+                    <li>From there, apply the formula that applies. "Structure" refers to the configuration of the amount of axes of all the subrotations. For example, [-X, -Y, +Z-W] has lengths [1, 1, 2], which falls under [a<sub>1</sub>, a<sub>2</sub>, b]. </li>
+                </ul>
+                <h3>5 Subrotations</h3>
+                <table>
+                    <tr>
+                        <th class="odd">Structure</th>
+                        <th class="odd">Formula</th>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, b<sub>1</sub>, b<sub>2</sub>, c</td>
+                        <td>f<sub>c</sub>(f<sub>b<sub>1</sub></sub>(f<sub>a<sub>1</sub></sub>(p<sub>c</sub> - s<sub>c</sub>) + f<sub>a<sub>1</sub></sub>(p<sub>c</sub> - s<sub>c</sub>)) + f<sub>b<sub>1</sub></sub>(f<sub>a<sub>1</sub></sub>(p<sub>c</sub> - s<sub>c</sub>) + f<sub>a<sub>1</sub></sub>(p<sub>c</sub> - s<sub>c</sub>)))</td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub>, b, c</td>
+                        <td>f<sub>b</sub>(p<sub>a<sub>1</sub></sub> - s<sub>b</sub> + a<sub>a<sub>1</sub></sub> + t<sub>a<sub>1</sub></sub> - 2D<sup>2</sup>) - f<sub>c</sub>(p<sub>a<sub>1</sub></sub> - s<sub>c</sub> + a<sub>a<sub>1</sub></sub> + t<sub>a<sub>1</sub></sub> - 2D<sup>2</sup>) + f<sub>b</sub>(2p<sub>c</sub>)</td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub>, b<sub>1</sub>, b<sub>2</sub></td>
+                        <td>f<sub>b<sub>1</sub></sub>(a<sub>a<sub>1</sub></sub> + a<sub>a<sub>2</sub></sub> + a<sub>a<sub>3</sub></sub>) + f<sub>b<sub>2</sub></sub>(a<sub>a<sub>1</sub></sub> + a<sub>a<sub>2</sub></sub> + a<sub>a<sub>3</sub></sub>) - (f<sub>a<sub>1</sub></sub>(D<sup>2</sup>) + f<sub>a<sub>2</sub></sub>(D<sup>2</sup>) + f<sub>a<sub>3</sub></sub>(D<sup>2</sup>))</td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub>, a<sub>4</sub>, b</td>
+                        <td>f<sub>a<sub>1</sub></sub>(p<sub>b</sub> + a<sub>b</sub> + t<sub>b</sub>) + f<sub>a<sub>2</sub></sub>(p<sub>b</sub> + a<sub>b</sub> + t<sub>b</sub>) + f<sub>a<sub>3</sub></sub>(p<sub>b</sub> + a<sub>b</sub> + t<sub>b</sub>) + f<sub>a<sub>4</sub></sub>(p<sub>b</sub> + a<sub>b</sub> + t<sub>b</sub>)</td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub>, a<sub>4</sub>, a<sub>5</sub></td>
+                        <td>f<sub>a<sub>1</sub></sub>(p<sub>a<sub>1</sub></sub> + s<sub>a<sub>1</sub></sub>) + f<sub>a<sub>2</sub></sub>(p<sub>a<sub>2</sub></sub> + s<sub>a<sub>2</sub></sub>) + f<sub>a<sub>3</sub></sub>(p<sub>a<sub>3</sub></sub> + s<sub>a<sub>3</sub></sub>) + f<sub>a<sub>4</sub></sub>(p<sub>a<sub>4</sub></sub> + s<sub>a<sub>4</sub></sub>) + f<sub>a<sub>5</sub></sub>(p<sub>a<sub>5</sub></sub> + s<sub>a<sub>5</sub></sub>)</td>
+                    </tr>
+                </table>
+                <h3>4 Subrotations</h3>
+                <table>
+                    <tr>
+                        <th class="odd">Structure</th>
+                        <th class="odd">Formula</th>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, b, c</td>
+                        <td>f<sub>c</sub>(f<sub>b</sub>(s<sub>a<sub>1</sub></sub> + s<sub>a<sub>2</sub></sub>) + D) + f<sub>b</sub>(f<sub>c</sub>(p<sub>a<sub>1</sub></sub> + p<sub>a<sub>2</sub></sub>) + D) - t<sub>a<sub>1</sub></sub> - t<sub>a<sub>2</sub></sub> + D</td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, b<sub>1</sub>, b<sub>2</sub></td>
+                        <td>f<sub>b<sub>1</sub></sub>(f<sub>a<sub>1</sub></sub>(D) + f<sub>a<sub>2</sub></sub>(D)) + f<sub>b<sub>2</sub></sub>(f<sub>a<sub>1</sub></sub>(D) + f<sub>a<sub>2</sub></sub>(D)) - 2t<sub>a<sub>1</sub></sub> - 2t<sub>a<sub>2</sub></sub></td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub>, b</td>
+                        <td>f<sub>b</sub>(s<sub>a<sub>1</sub></sub> + s<sub>a<sub>2</sub></sub> + s<sub>a<sub>3</sub></sub> - t<sub>b</sub>) - f<sub>b</sub>(p<sub>a<sub>1</sub></sub> + p<sub>a<sub>2</sub></sub> + p<sub>a<sub>3</sub></sub> - s<sub>b</sub>) - s<sub>b</sub> + 2D</td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub>, a<sub>4</sub></td>
+                        <td>f<sub>a<sub>1</sub></sub>(p<sub>a<sub>1</sub></sub> - t<sub>a<sub>1</sub></sub>) + f<sub>a<sub>2</sub></sub>(p<sub>a<sub>1</sub></sub> - t<sub>a<sub>1</sub></sub>) + f<sub>a<sub>3</sub></sub>(p<sub>a<sub>1</sub></sub> - t<sub>a<sub>1</sub></sub>) + f<sub>a<sub>4</sub></sub>(p<sub>a<sub>1</sub></sub> - t<sub>a<sub>1</sub></sub>)</td>
+                    </tr>
+                </table>
+                <h3>3 Subrotations</h3>
+                <table>
+                    <tr>
+                        <th class="odd">Structure</th>
+                        <th class="odd">Formula</th>
+                    </tr>
+                    <tr>
+                        <td>a, b, c</td>
+                        <td>f<sub>c</sub>(f<sub>b</sub>(f<sub>a</sub>(s<sub>a</sub> - D) + s<sub>b</sub>) + s<sub>c</sub>) - D</td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, b</td>
+                        <td>f<sub>b</sub>(s<sub>a<sub>1</sub></sub> + s<sub>a<sub>2</sub></sub> + D) - (f<sub>a<sub>1</sub></sub>(s<sub>b</sub>) + f<sub>a<sub>2</sub></sub>(s<sub>b</sub>))</td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub></td>
+                        <td>f<sub>a<sub>1</sub></sub>(s<sub>a<sub>1</sub></sub> - D) + f<sub>a<sub>2</sub></sub>(s<sub>a<sub>2</sub></sub> - D) + f<sub>a<sub>3</sub></sub>(s<sub>a<sub>3</sub></sub> - D)</td>
+                    </tr>
+                </table>
+                <h3>2 Subrotations</h3>
+                <table>
+                    <tr>
+                        <th class="odd">Structure</th>
+                        <th class="odd">Formula</th>
+                    </tr>
+                    <tr>
+                        <td>a, b</td>
+                        <td>s<sub>b</sub> - s<sub>a</sub> + D<sup>2</sup></td>
+                    </tr>
+                    <tr>
+                        <td>a<sub>1</sub>, a<sub>2</sub></td>
+                        <td>s<sub>a<sub>1</sub></sub> + s<sub>a<sub>2</sub></sub> - D<sup>2</sup></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="page-footer relative-footer">Page 6 of 7</div>
+        </div>
+        <div class="page page-bg-07">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">The Octadecayotton</span>
+            </div>
+            <div class="page-content">
+                <h3>Submission</h3>
+            </div>
+            <div class="page-footer relative-footer">Page 7 of 7</div>
+        </div>
+    </div>
+</body>
+</html>
