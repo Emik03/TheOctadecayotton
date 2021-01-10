@@ -70,10 +70,10 @@ internal static class Calculate
     private static void LogPrimaryValues()
     {
         Debug.LogWarning("Filter out this table by pressing the warning icon in the top right of your unity!");
-        for (int i = 0; i < System.Enum.GetValues(typeof(Axis)).GetLength(0); i++)
+        for (int i = 0; i < Enum.GetValues(typeof(Axis)).GetLength(0); i++)
         {
             string str = string.Empty;
-            for (int j = 0; j < System.Enum.GetValues(typeof(Axis)).GetLength(0); j++)
+            for (int j = 0; j < Enum.GetValues(typeof(Axis)).GetLength(0); j++)
                 str += GetPrimaryValue(new Rotation(true, (Axis)i), new Rotation(true, (Axis)j), 0);
             Debug.LogWarning(str);
         }
