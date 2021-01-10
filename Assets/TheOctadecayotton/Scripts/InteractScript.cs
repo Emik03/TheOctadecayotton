@@ -67,11 +67,12 @@ public class InteractScript : MonoBehaviour
             Debug.LogFormat("[The Octadecayotton #{0}]: The anchor sphere is in {1}. ({2}-ordered)",
                 _moduleId,
                 AnchorSphere.Select(a => a.Value ? "+" : "-").Join(""),
-                "XYZUVWRSTOPQ".Substring(0, Dimension));
+                "XYZWVURSTOPQ".Substring(0, Dimension));
 
             CreateStartingSphere();
-            Debug.LogFormat("[The Octadecayotton #{0}]: To solve this module, press anywhere to enter submission, submit the digits from left-to-right when the last digit of the timer matches the digit shown, then submit on every digit from {1} down to 0.",
+            Debug.LogFormat("[The Octadecayotton #{0}]: To solve this module, press anywhere to enter submission, submit the digits from left-to-right when the {1} matches the digit shown, then submit on every digit from {2} down to 0.",
                 _moduleId,
+                Dimension > 10 ? "timer modulo 20" : "last digit of the timer",
                 Dimension - 1);
             Debug.LogFormat("[The Octadecayotton #{0}]: Example full solution (not knowing axes) => {1}.",
                 _moduleId,
@@ -182,7 +183,7 @@ public class InteractScript : MonoBehaviour
         Debug.LogFormat("[The Octadecayotton #{0}]: The starting sphere is in {1}. ({2}-ordered)",
             _moduleId,
             startingSphere.Select(a => a.Value ? "+" : "-").Join(""),
-            "XYZUVWRSTOPQ".Substring(0, Dimension));
+            "XYZWVURSTOPQ".Substring(0, Dimension));
     }
 
     private bool HandleSubmission()

@@ -2,13 +2,12 @@
 <html>
 
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>The Octadecayotton — Keep Talking and Nobody Explodes Module</title>
     <meta name="viewport" content="initial-scale=1">
+    <title>The Octadecayotton — Keep Talking and Nobody Explodes Module</title>
+    <link rel="stylesheet" type="text/css" href="css/font.css">
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <link rel="stylesheet" type="text/css" href="css/font.css">
     <script src="js/ktane-utils.js"></script>
     <style>
         @media screen and (min-width: 900px) {
@@ -34,6 +33,11 @@
 
         path {
             fill: transparent;
+        }
+
+        table {
+            margin-left: auto;
+            margin-right: auto;
         }
 
         #dimensions {
@@ -234,7 +238,7 @@
                 </ul>
                 <p><sup><i>* Even with 2 axes, this rule still applies. For example, subrotation +R-T gives +R-T and
                             -T+R.</i></sup></p>
-                <table align="center">
+                <table>
                     <tr>
                         <th class="corner" rowspan="2" colspan="2"></th>
                         <th class="odd">X</th>
@@ -249,6 +253,7 @@
                         <th class="odd dim-exceed-10">O</th>
                         <th class="odd dim-exceed-11">P</th>
                         <th class="odd dim-exceed-12">Q</th>
+                        <th class="corner" rowspan="2" colspan="2"></th>
                     </tr>
                     <tr>
                         <th colspan="12" class="vertical-separator"></th>
@@ -450,6 +455,7 @@
                     <tr>
                         <th class="corner" rowspan="2" colspan="2"></th>
                         <th colspan="12" class="vertical-separator"></th>
+                        <th class="corner" rowspan="2" colspan="2"></th>
                     </tr>
                     <tr>
                         <th class="last-row">X</th>
@@ -482,7 +488,7 @@
                         p<sub>3</sub> is mentioned, it refers to the primary value of the 1<sup>st</sup>,
                         2<sup>nd</sup>, and 3<sup>rd</sup> rotation respectively.</li>
                 </ul>
-                <p><span id="dim-modulo-explanation"></p>
+                <p><span id="dim-modulo-explanation"></span></p>
                 <h3>The Anchor Sphere</h3>
                 <ul>
                     <li>Create 4 codes, named a<sub>0</sub>, a<sub>1</sub>, a<sub>2</sub>, and a<sub>3</sub>, each
@@ -495,15 +501,15 @@
                     <li>Repeat the above step using p<sub>2</sub> and a<sub>2</sub>, as well as p<sub>3</sub> and
                         a<sub>3</sub>.</li>
                 </ul>
-                <table align="center">
+                <table>
                     <tr>
                         <th class="odd">Decimal &lt;-&gt; Binary</th>
                     </tr>
                     <tr>
                         <td>
-                            <table align="center">
+                            <table>
                                 <tr>
-                                    <th colspan="2" class="odd">Subtract</th>
+                                    <th class="odd">Subtract</th>
                                     <td class="odd dim-exceed-12">2048</td>
                                     <td class="odd dim-exceed-11">1024</td>
                                     <td class="odd dim-exceed-10">512</td>
@@ -518,7 +524,7 @@
                                     <td class="odd">1</td>
                                 </tr>
                                 <tr>
-                                    <th colspan="2">Position</th>
+                                    <th>Position</th>
                                     <td>1<sup>st</sup></td>
                                     <td>2<sup>nd</sup></td>
                                     <td>3<sup>rd</sup></td>
@@ -539,32 +545,30 @@
                 <ul>
                     <li>Look at a<sub>1</sub> and its rotation, for each axis, invert the number's position (0 -> 1, 1
                         -> 0) according to this the table below.</li>
-                    <li>Repeat this for a<sub>2</sub> and a<sub>3</sub>, then set a<sub>0</sub> based on these
-                        conditions.</li>
-                    <ul>
-                        <li>If the <span class="dim-a0-check"></span> digit of a<sub>1</sub> is 1, <span
-                                class="dim-a0-set"></span> of a<sub>0</sub> to 1.</li>
-                        <li>If the <span class="dim-a0-check"></span> digit of a<sub>2</sub> is 1, <span
-                                class="dim-a0-set2"></span> of a<sub>0</sub> to 1.</li>
-                        <li>If the <span class="dim-a0-check"></span> digit of a<sub>3</sub> is 1, <span
-                                class="dim-a0-set3"></span> of a<sub>0</sub> to 1.</li>
-                    </ul>
+                    <li>Repeat this for a<sub>2</sub> and a<sub>3</sub>, then set a<sub>0</sub> based on these 3
+                        conditions:</li>
+                    <li>If the <span class="dim-a0-check"></span> digit of a<sub>1</sub> is 1, <span
+                            class="dim-a0-set"></span> of a<sub>0</sub> to 1.</li>
+                    <li>If the <span class="dim-a0-check"></span> digit of a<sub>2</sub> is 1, <span
+                            class="dim-a0-set2"></span> of a<sub>0</sub> to 1.</li>
+                    <li>If the <span class="dim-a0-check"></span> digit of a<sub>3</sub> is 1, <span
+                            class="dim-a0-set3"></span> of a<sub>0</sub> to 1.</li>
                 </ul>
-                <table align="center">
+                <table>
                     <tr>
                         <th class="odd">Axis &lt;-&gt; Position</th>
                     </tr>
                     <tr>
                         <td>
-                            <table align="center">
+                            <table>
                                 <tr>
-                                    <th colspan="2" class="odd">+Axis</th>
+                                    <th class="odd">+Axis</th>
                                     <td class="odd">+X</td>
                                     <td class="odd">+Y</td>
                                     <td class="odd">+Z</td>
                                     <td class="odd dim-exceed-4">+W</td>
                                     <td class="odd dim-exceed-5">+V</td>
-                                    <td class="odd dim-exceed-6">+V</td>
+                                    <td class="odd dim-exceed-6">+U</td>
                                     <td class="odd dim-exceed-7">+R</td>
                                     <td class="odd dim-exceed-8">+S</td>
                                     <td class="odd dim-exceed-9">+T</td>
@@ -573,7 +577,7 @@
                                     <td class="odd dim-exceed-12">+Q</td>
                                 </tr>
                                 <tr>
-                                    <th colspan="2">-Axis</th>
+                                    <th>-Axis</th>
                                     <td class="dim-exceed-12">-Q</td>
                                     <td class="dim-exceed-11">-P</td>
                                     <td class="dim-exceed-10">-O</td>
@@ -588,7 +592,7 @@
                                     <td>-X</td>
                                 </tr>
                                 <tr>
-                                    <th colspan="2" class="odd">Position</th>
+                                    <th class="odd">Position</th>
                                     <td class="odd">1<sup>st</sup></td>
                                     <td class="odd">2<sup>nd</sup></td>
                                     <td class="odd">3<sup>rd</sup></td>
@@ -616,15 +620,15 @@
             </div>
             <div class="page-content">
                 <h3>The Anchor Sphere (...continued)</h3>
+                <p>a<sub>1-3</sub> is now gray code, convert each one to binary:</p>
+                <ol>
+                    <li>The first binary digit will match the first digit of the gray code.</li>
+                    <li>The next digit is a 1 if the sum of the previous digit of the binary code and the current
+                        position's gray code is exactly 1. Otherwise it's 0.</li>
+                    <li>Repeat step 2 until <span class="dim-number"></span> digits are obtained. This is the binary
+                        code.</li>
+                </ol>
                 <ul>
-                    <li>a<sub>1-3</sub> is now gray code, convert each one to binary:</li>
-                    <ol>
-                        <li>The first binary digit will match the first digit of the gray code.</li>
-                        <li>The next digit is a 1 if the sum of the previous digit of the binary code and the current
-                            position's gray code is exactly 1. Otherwise it's 0.</li>
-                        <li>Repeat step 2 until <span class="dim-number"></span> digits are obtained. This is the binary
-                            code.</li>
-                    </ol>
                     <li>Starting from a<sub>1</sub>, add the current a with the previous a, and then refer to the next
                         a. Don't carry (1+1 ≠ 10) and replace 2's with 0's on each step.</li>
                     <li>Replace every 0 with - and every 1 with +. This is now the <u>anchor sequence</u>. Whenever the
@@ -652,9 +656,7 @@
                     <li>The starting sphere goes to the other side of all <span class="dim-axis-queue"></span> that were
                         submitted.</li>
                     <li>During this submission, all axes can only be submitted up to 2 times.</li>
-                    <ul>
-                        <li id="dim-exactly-4"></li>
-                    </ul>
+                    <li id="dim-exactly-4"></li>
                     <li>When the starting sphere is in the same position as the anchor sphere, submit all <span
                             class="dim-number"></span> axes. The module will strike or solve accordingly.</li>
                     <li>Striking the module will unpause the module.</li>
@@ -726,7 +728,7 @@
             for (let i = 0; i < dimAxisList2.length; i++)
                 dimAxisList2[i].innerHTML = ['Z, Y (stacked on top of the filled sphere), and X', 'Z, W, Y (stacked on top of the filled sphere), and X', 'Z, V, W, Y (stacked on top of the filled sphere), and X', 'Z, V, W, U, Y (stacked on top of the filled sphere), and X', 'Z, V, W, U, R, Y (stacked on top of the filled sphere), and X', 'S, Z, V, W, U, R, Y (stacked on top of the filled sphere), and X', 'S, Z, V, W, U, T, R, Y (stacked on top of the filled sphere), and X', 'O, S, Z, V, W, U, T, R, Y (stacked on top of the filled sphere), and X', 'O, S, Z, V, W, P, U, T, R, Y (stacked on top of the filled sphere), and X', 'O, S, Z, V, W, P, U, Q, T, R, Y (stacked on top of the filled sphere), and X'][index];
             for (let i = 0; i < dimAxisList3.length; i++)
-                dimAxisList3[i].innerHTML = 'XYZUVWRSTOPQ'.substring(0, index + 3);
+                dimAxisList3[i].innerHTML = 'XYZWVURSTOPQ'.substring(0, index + 3);
             for (let i = 0; i < dimSphereCount.length; i++)
                 dimSphereCount[i].innerHTML = Math.pow(2, index + 3);
             for (let i = 0; i < dimUpperBound.length; i++)

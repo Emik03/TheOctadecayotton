@@ -44,7 +44,7 @@ namespace TheOctadecayotton
 
                 _interact.Spheres.Add(instance);
 
-                for (int j = 0; dimension > 9 ? i % (dimension - 8) == 0 && j == 0 : j < Math.Pow(2, 9 - dimension); j++)
+                for (int j = 0; dimension > 9 ? i % (dimension - 8) == 0 && j == 0 && i > Math.Pow(2, dimension) / 3 : j < Math.Pow(2, 9 - dimension) && i > Math.Pow(2, dimension) / 4; j += 4)
                 {
                     float progress = 1 - ((i / (float)Math.Pow(2, dimension)) + (j / (float)Math.Pow(2, 9 - dimension) / (float)Math.Pow(2, dimension)));
                     byte b = (byte)(progress * 255);
@@ -59,7 +59,8 @@ namespace TheOctadecayotton
                             Rnd.Range(-0.01f, 0.01f) + 0.5f), progress.ElasticInOut());
                         sphere.UpdateColor();
                     }
-                    yield return new WaitForSecondsRealtime(0.001f);
+                    if (!(dimension == 8 && i % 2 != 0 || dimension == 9 && i % 4 != 0))
+                        yield return new WaitForFixedUpdate();
                 }
             }
 
@@ -68,7 +69,7 @@ namespace TheOctadecayotton
             for (byte i = 5; i >= 5; i += 5)
             {
                 _interact.ModuleRenderer.material.color = new Color32(i, i, i, 255);
-                yield return new WaitForSecondsRealtime(0.02f);
+                yield return new WaitForFixedUpdate();
             }
 
             _interact.isRotating = _interact.isActive = true;
@@ -101,14 +102,14 @@ namespace TheOctadecayotton
                 sphere.UpdateColor();
 
             bool shortTime = false;
-            if (_octadecayotton.Info.GetTime() < 120)
+            if (_octadecayotton.Info.GetTime() < 60)
             {
                 shortTime = true;
                 _octadecayotton.Module.HandlePass();
             }
 
-            yield return ExpandSpheres(-4, 1 / 256f);
-            yield return ShuffleSpheres(1 / 1024f);
+            yield return ExpandSpheres(-4, 1 / 128f);
+            yield return ShuffleSpheres(1 / 512f);
 
             if (!shortTime)
             _octadecayotton.Module.HandlePass();
@@ -127,7 +128,7 @@ namespace TheOctadecayotton
                     _interact.Spheres[i].transform.localPosition = _interact.Spheres[i].pos.MergeDimensions(
                         vectors[i],
                         Easing.InOutCubic(k, 0, 1, 1));
-                yield return new WaitForSecondsRealtime(0.01f);
+                yield return new WaitForFixedUpdate();
                 k += speed;
             }
         }
@@ -141,7 +142,7 @@ namespace TheOctadecayotton
             {
                 for (int j = 0; j < _interact.Spheres.Count; j++)
                     _interact.Spheres[j].transform.localPosition = oldVectors[j].Merge(newVectors[j], Easing.InOutCubic(i, 0, 1, 1));
-                yield return new WaitForSecondsRealtime(0.01f);
+                yield return new WaitForFixedUpdate();
             }
         }
 
