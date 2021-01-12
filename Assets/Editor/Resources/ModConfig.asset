@@ -30,6 +30,6 @@ MonoBehaviour:
 
     Do you want to file a bug report? Do you have a question about the module? Contact
     me on Discord: @Emik#0001'
-  version: 1.0.3
+  version: 1.0.5
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 2bc0c5cc5f2837445a47113ca6a51655, type: 3}

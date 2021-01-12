@@ -19,6 +19,7 @@ public class InteractScript : MonoBehaviour
     internal bool isRotating, isSubmitting, isActive, isStarting;
     internal int Dimension { get { return _dimension; } set { if (_dimension == 0) _dimension = Mathf.Clamp(value, 3, 12); } }
     internal int GetLastDigitOfTimer { get { return (int)(Info.GetTime() % (Dimension > 10 ? 20 : 10)); } }
+    internal float GetPreciseLastDigitOfTimer { get { return Info.GetTime() % (Dimension > 10 ? 20 : 10); } }
     internal float rotationProgress;
     internal Dictionary<Axis, bool> startingSphere = new Dictionary<Axis, bool>();
     internal static IEnumerable<Axis> allAxies = Enum.GetValues(typeof(Axis)).Cast<Axis>();
@@ -47,7 +48,8 @@ public class InteractScript : MonoBehaviour
             _stepRequired = stepRequired;
             _isUsingBounce = isUsingBounce;
 
-            TheOctadecayottonScript.Activated++;
+            if (Dimension == 0)
+                TheOctadecayottonScript.Activated++;
             Dimension = dimension + TheOctadecayottonScript.Activated;
 
             StartCoroutine(_animate.CreateHypercube(Dimension));
@@ -85,23 +87,23 @@ public class InteractScript : MonoBehaviour
         };
     }
 
-    internal KMSelectable.OnInteractHandler OnInteract()
+    internal KMSelectable.OnInteractHandler OnInteract(TheOctadecayottonScript octadecayotton, int dimension, int rotation, int stepRequired, bool isUsingBounce)
     {
-        return () =>
+        return Init(octadecayotton, dimension, rotation, stepRequired, isUsingBounce) + (() =>
         {
             _octadecayotton.ModuleSelectable.AddInteractionPunch();
             _octadecayotton.PlaySound("InteractInterrupt");
             if (!isActive || _octadecayotton.IsSolved)
                 return false;
             return isSubmitting ? HandleSubmission() : !(isSubmitting = true);
-        };
+        });
     }
 
-    internal int[][] GetAnswer()
+    internal int[][] GetAnswer(bool flip)
     {
         List<int[]> temp = startingSphere.GetAnswer(AnchorSphere, _axesUsed, _order, false).ToList();
         temp.Add(Enumerable.Range(0, Dimension).Reverse().ToArray());
-        return temp.ToArray();
+        return flip ? temp.Select(c => c.Reverse().ToArray()).ToArray() : temp.ToArray();
     }
 
     private void FixedUpdate()
@@ -109,7 +111,9 @@ public class InteractScript : MonoBehaviour
         if (_octadecayotton == null || _octadecayotton.IsSolved)
             return;
 
-        if (isSubmitting && !isRotating && GetLastDigitOfTimer == (Dimension > 10 ? 19 : 9) && _inputs.Count != 0 && !(Dimension == 10 && _inputs.Count == 1))
+        if (isSubmitting && !isRotating && _inputs.Count != 0 && !(Dimension == 10 && _inputs.Count == 1) && 
+           ((_octadecayotton.ZenModeActive && GetPreciseLastDigitOfTimer > (Dimension > 10 ? 19.5f : 9.5f)) ||
+           (!_octadecayotton.ZenModeActive && GetPreciseLastDigitOfTimer < (Dimension > 10 ? 19.5f : 9.5f) && GetPreciseLastDigitOfTimer > (Dimension > 10 ? 19 : 9))))
         {
             if (!_inputs.Validate(startingSphere, AnchorSphere, _axesUsed, _order, ref _breakCount, Dimension, ref _moduleId))
                 StartCoroutine(_animate.Strike());
@@ -188,8 +192,12 @@ public class InteractScript : MonoBehaviour
 
     private bool HandleSubmission()
     {
-        if (GetLastDigitOfTimer >= Dimension || !isSubmitting)
+        if (GetLastDigitOfTimer >= Dimension || !isSubmitting || isStarting)
+        {
+            if (!isSubmitting)
+                _inputs = new List<Axis>();
             return false;
+        }
 
         _octadecayotton.PlaySound("Interact");
 
@@ -198,6 +206,8 @@ public class InteractScript : MonoBehaviour
 
         for (int i = 0; i < Spheres.Count; i++)
         {
+            if (Spheres[i] == null)
+                continue;
             Spheres[i].SphereRenderer.material.color = Color.gray;
             Spheres[i].HandleUpdate();
         }

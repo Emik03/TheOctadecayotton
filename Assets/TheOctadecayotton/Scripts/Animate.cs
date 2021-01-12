@@ -73,7 +73,10 @@ namespace TheOctadecayotton
             }
 
             _interact.isRotating = _interact.isActive = true;
-            _interact.isStarting = false;
+            _interact.isStarting = _interact.isSubmitting = false;
+
+            foreach (var sphere in _interact.Spheres)
+                sphere.Light.enabled = false;
         }
 
         internal IEnumerator DestroyHypercube()
@@ -81,7 +84,7 @@ namespace TheOctadecayotton
             for (int i = 0; i < _interact.Spheres.Count; i++)
             {
                 if (_interact.Spheres[i].Sphere.name.Contains("(Clone)"))
-                    UnityEngine.Object.Destroy(_interact.Spheres[i].Sphere);
+                    _interact.Spheres[i].Light.enabled = false;
 
                 if (i % Math.Pow(2, Math.Max(_interact.Dimension - 7, 0)) == 0)
                     yield return new WaitForSecondsRealtime(0.02f * (float)Math.Pow(2, Math.Max(9 - _interact.Dimension, 0)));
