@@ -95,7 +95,9 @@ public class InteractScript : MonoBehaviour
             _octadecayotton.PlaySound("InteractInterrupt");
             if (!isActive || _octadecayotton.IsSolved)
                 return false;
-            return isSubmitting ? HandleSubmission() : !(isSubmitting = true);
+            if (isRotating)
+                isSubmitting = true;
+            return HandleSubmission();
         });
     }
 

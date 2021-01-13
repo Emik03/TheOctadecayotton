@@ -17,7 +17,7 @@ public class SphereScript : MonoBehaviour
 
     internal void HandleUpdate()
     {
-        if (Octadecayotton.Interact.isRotating)
+        if (Octadecayotton.Interact.isRotating || Octadecayotton.Interact.isStarting)
             UpdateColor();
 
         else if (Octadecayotton.Interact.isSubmitting)

@@ -16,6 +16,7 @@ namespace TheOctadecayotton
 
         private readonly InteractScript _interact;
         private readonly TheOctadecayottonScript _octadecayotton;
+        private bool _isFinished;
 
         internal IEnumerator CreateHypercube(int dimension)
         {
@@ -84,11 +85,13 @@ namespace TheOctadecayotton
             for (int i = 0; i < _interact.Spheres.Count; i++)
             {
                 if (_interact.Spheres[i].Sphere.name.Contains("(Clone)"))
-                    _interact.Spheres[i].Light.enabled = false;
+                    UnityEngine.Object.Destroy(_interact.Spheres[i].Sphere);
 
                 if (i % Math.Pow(2, Math.Max(_interact.Dimension - 7, 0)) == 0)
                     yield return new WaitForSecondsRealtime(0.02f * (float)Math.Pow(2, Math.Max(9 - _interact.Dimension, 0)));
             }
+
+            _isFinished = true;
         }
 
         internal IEnumerator Solve()
@@ -128,9 +131,10 @@ namespace TheOctadecayotton
             while (k <= 1)
             {
                 for (int i = 0; i < _interact.Spheres.Count; i++)
-                    _interact.Spheres[i].transform.localPosition = _interact.Spheres[i].pos.MergeDimensions(
-                        vectors[i],
-                        Easing.InOutCubic(k, 0, 1, 1));
+                    if (_interact.Spheres[i] != null)
+                        _interact.Spheres[i].transform.localPosition = _interact.Spheres[i].pos.MergeDimensions(
+                            vectors[i],
+                            Easing.InOutCubic(k, 0, 1, 1));
                 yield return new WaitForFixedUpdate();
                 k += speed;
             }
@@ -171,10 +175,11 @@ namespace TheOctadecayotton
 
         internal IEnumerator Strike()
         {
+            _interact.isSubmitting = false;
+            _interact.isRotating = false;
+
             _octadecayotton.PlaySound("Strike");
             Debug.LogFormat("[The Octadecayotton #{0}]: Incorrect submission, strike and reset!", _octadecayotton.ModuleId);
-            _interact.isRotating = false;
-            _interact.isSubmitting = false;
 
             _interact.ModuleRenderer.material.mainTexture = null;
 
@@ -189,8 +194,11 @@ namespace TheOctadecayotton
             _interact.ModuleRenderer.material.color = Color.white;
             _interact.ModuleRenderer.material.mainTexture = _interact.NeutralTexture;
 
-            yield return ExpandSpheres(0, 1 / 256f);
-            yield return DestroyHypercube();
+            _isFinished = false;
+            _interact.StartCoroutine(DestroyHypercube());
+            yield return ExpandSpheres(0, 1 / 512f);
+            yield return new WaitUntil(() => _isFinished);
+
             _octadecayotton.Module.HandleStrike();
             _interact.isActive = false;
         }
