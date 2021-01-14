@@ -61,7 +61,7 @@ namespace TheOctadecayotton
                         sphere.UpdateColor();
                     }
                     if (!(dimension == 8 && i % 2 != 0 || dimension == 9 && i % 4 != 0))
-                        yield return new WaitForFixedUpdate();
+                        yield return new WaitForSecondsRealtime(0.02f);
                 }
             }
 
@@ -70,7 +70,7 @@ namespace TheOctadecayotton
             for (byte i = 5; i >= 5; i += 5)
             {
                 _interact.ModuleRenderer.material.color = new Color32(i, i, i, 255);
-                yield return new WaitForFixedUpdate();
+                yield return new WaitForSecondsRealtime(0.02f);
             }
 
             _interact.isRotating = _interact.isActive = true;
@@ -97,8 +97,8 @@ namespace TheOctadecayotton
         internal IEnumerator Solve()
         {
             _octadecayotton.IsSolved = true;
-            Debug.LogFormat("[The Octadecayotton #{0}]: Module disarmed.", _octadecayotton.ModuleId);
-            _octadecayotton.PlaySound("Solve");
+            Debug.LogFormat("[The Octadecayotton #{0}]: Module disarmed.", _octadecayotton.moduleId);
+            _octadecayotton.PlaySound(_interact.Dimension > 9 ? "SolveHard" : "Solve");
 
             _interact.isActive = false;
             _interact.isRotating = false;
@@ -135,7 +135,7 @@ namespace TheOctadecayotton
                         _interact.Spheres[i].transform.localPosition = _interact.Spheres[i].pos.MergeDimensions(
                             vectors[i],
                             Easing.InOutCubic(k, 0, 1, 1));
-                yield return new WaitForFixedUpdate();
+                yield return new WaitForSecondsRealtime(0.02f);
                 k += speed;
             }
         }
@@ -149,7 +149,7 @@ namespace TheOctadecayotton
             {
                 for (int j = 0; j < _interact.Spheres.Count; j++)
                     _interact.Spheres[j].transform.localPosition = oldVectors[j].Merge(newVectors[j], Easing.InOutCubic(i, 0, 1, 1));
-                yield return new WaitForFixedUpdate();
+                yield return new WaitForSecondsRealtime(0.02f);
             }
         }
 
@@ -179,7 +179,7 @@ namespace TheOctadecayotton
             _interact.isRotating = false;
 
             _octadecayotton.PlaySound("Strike");
-            Debug.LogFormat("[The Octadecayotton #{0}]: Incorrect submission, strike and reset!", _octadecayotton.ModuleId);
+            Debug.LogFormat("[The Octadecayotton #{0}]: Incorrect submission, strike and reset!", _octadecayotton.moduleId);
 
             _interact.ModuleRenderer.material.mainTexture = null;
 

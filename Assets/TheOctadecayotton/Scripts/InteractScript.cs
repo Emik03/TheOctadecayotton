@@ -18,7 +18,7 @@ public class InteractScript : MonoBehaviour
 
     internal bool isRotating, isSubmitting, isActive, isStarting;
     internal int Dimension { get { return _dimension; } set { if (_dimension == 0) _dimension = Mathf.Clamp(value, 3, 12); } }
-    internal int GetLastDigitOfTimer { get { return (int)(Info.GetTime() % (Dimension > 10 ? 20 : 10)); } }
+    internal int GetLastDigitOfTimer { get { return (int)GetPreciseLastDigitOfTimer; } }
     internal float GetPreciseLastDigitOfTimer { get { return Info.GetTime() % (Dimension > 10 ? 20 : 10); } }
     internal float rotationProgress;
     internal Dictionary<Axis, bool> startingSphere = new Dictionary<Axis, bool>();
@@ -44,7 +44,7 @@ public class InteractScript : MonoBehaviour
 
             _octadecayotton = octadecayotton;
             _animate = new Animate(this, _octadecayotton);
-            _moduleId = octadecayotton.ModuleId;
+            _moduleId = octadecayotton.moduleId;
             _stepRequired = stepRequired;
             _isUsingBounce = isUsingBounce;
 
@@ -61,6 +61,8 @@ public class InteractScript : MonoBehaviour
                       ? TheOctadecayottonExtensions.GetRandomRotations(new RotationOptions(dimension: Dimension, rotationCount: rotation))
                       : octadecayotton.ForceRotation.ToRotations();
 
+            Debug.LogFormat("[The Octadecayotton #{0}]: Initalizing with {1} dimensions.", _moduleId, Dimension);
+            Debug.LogFormat("[The Octadecayotton #{0}]: NOTE: Rotations are cyclic, meaning that +X-Y+Z is the same as -Y+Z+X and +Z+X-Y!", _moduleId);
             Debug.LogFormat("[The Octadecayotton #{0}]: The rotations are {1}.",
                 _moduleId,
                 Rotations.ToLog());
@@ -113,9 +115,9 @@ public class InteractScript : MonoBehaviour
         if (_octadecayotton == null || _octadecayotton.IsSolved)
             return;
 
-        if (isSubmitting && !isRotating && _inputs.Count != 0 && !(Dimension == 10 && _inputs.Count == 1) && 
-           ((_octadecayotton.ZenModeActive && GetPreciseLastDigitOfTimer > (Dimension > 10 ? 19.5f : 9.5f)) ||
-           (!_octadecayotton.ZenModeActive && GetPreciseLastDigitOfTimer < (Dimension > 10 ? 19.5f : 9.5f) && GetPreciseLastDigitOfTimer > (Dimension > 10 ? 19 : 9))))
+        if (isSubmitting && !isRotating && _inputs.Count != 0 && 
+           ((_octadecayotton.ZenModeActive && GetPreciseLastDigitOfTimer > (Dimension > 10 ? 19.5f : 9.5f) && GetPreciseLastDigitOfTimer < (Dimension > 10 ? 19.75f : 9.75f)) ||
+           (!_octadecayotton.ZenModeActive && GetPreciseLastDigitOfTimer < (Dimension > 10 ? 19.5f : 9.5f) && GetPreciseLastDigitOfTimer > (Dimension > 10 ? 19.25f : 9.25f))))
         {
             if (!_inputs.Validate(startingSphere, AnchorSphere, _axesUsed, _order, ref _breakCount, Dimension, ref _moduleId))
                 StartCoroutine(_animate.Strike());
@@ -190,6 +192,8 @@ public class InteractScript : MonoBehaviour
             _moduleId,
             startingSphere.Select(a => a.Value ? "+" : "-").Join(""),
             "XYZWVURSTOPQ".Substring(0, Dimension));
+        _octadecayotton.souvenirRotations = Rotations.ToLog();
+        _octadecayotton.souvenirSphere = startingSphere.ToLog();
     }
 
     private bool HandleSubmission()

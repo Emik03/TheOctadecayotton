@@ -71,7 +71,7 @@ namespace TheOctadecayotton
                     isUsingBounce = settings.IsUsingBounce;
                     stretchToFit = settings.StretchToFit;
                     Debug.LogFormat("[The Octadecayotton #{0}]: JSON loaded successfully, values are: [Dimensions = {1}], [Rotations = {2}], [25FPS: {3}], [InOutBounce: {4}], and [StretchToFit: {5}].",
-                        octadecayotton.ModuleId,
+                        octadecayotton.moduleId,
                         dimension,
                         rotation,
                         settings.LowFPS,
@@ -80,12 +80,12 @@ namespace TheOctadecayotton
                 }
 
                 else
-                    Debug.LogFormat("[The Octadecayotton #{0}]: JSON is null, resorting to default values.", octadecayotton.ModuleId);
+                    Debug.LogFormat("[The Octadecayotton #{0}]: JSON is null, resorting to default values.", octadecayotton.moduleId);
             }
             catch (JsonReaderException e)
             {
                 // In the case of catastrophic failure and devastation.
-                Debug.LogFormat("[The Octadecayotton #{0}]: JSON error: \"{1}\", resorting to default values.", octadecayotton.ModuleId, e.Message);
+                Debug.LogFormat("[The Octadecayotton #{0}]: JSON error: \"{1}\", resorting to default values.", octadecayotton.moduleId, e.Message);
             }
         }
     }

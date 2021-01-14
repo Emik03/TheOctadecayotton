@@ -19,10 +19,12 @@ public class TheOctadecayottonScript : MonoBehaviour
 
     internal static int ModuleIdCounter { get; private set; }
     internal static int Activated { get; set; }
-    internal int ModuleId { get; private set; }
+    internal int moduleId;
     internal static bool stretchToFit;
     internal bool IsSolved { get; set; }
     internal bool ZenModeActive;
+    internal string souvenirSphere;
+    internal string souvenirRotations;
 
     private static bool _isUsingBounce;
     private static int _dimension, _rotation, _stepRequired;
@@ -30,7 +32,7 @@ public class TheOctadecayottonScript : MonoBehaviour
     private void Start()
     {
         Activated = 0;
-        ModuleId = ++ModuleIdCounter;
+        moduleId = ++ModuleIdCounter;
         ModSettingsJSON.Get(this, out _dimension, out _rotation, out _stepRequired, out _isUsingBounce, out stretchToFit);
         
         ModuleSelectable.OnInteract += Interact.Init(this, _dimension - Info.GetSolvableModuleNames().Where(i => i == "The Octadecayotton").Count(), _rotation, _stepRequired, _isUsingBounce);
@@ -99,21 +101,21 @@ public class TheOctadecayottonScript : MonoBehaviour
 
         if (!Interact.isSubmitting)
             SubModuleSelectable.OnInteract();
-        while (!Interact.isSubmitting)
+        while (!Interact.isSubmitting || Interact.isRotating || (Interact.Dimension == 10 && Interact.GetPreciseLastDigitOfTimer > 9.75f))
             yield return true;
 
         int[][] answer = Interact.GetAnswer(ZenModeActive);
         for (int i = 0; i < answer.Length; i++)
         {
+            while (Interact.GetLastDigitOfTimer != (Interact.Dimension > 10 ? 19 : 9) || (Interact.GetPreciseLastDigitOfTimer > 9.125f && Interact.Dimension == 10))
+                yield return true;
+
             for (int j = 0; j < answer[i].Length; j++)
             {
                 while (Interact.GetLastDigitOfTimer != answer[i][j])
                     yield return true;
                 SubModuleSelectable.OnInteract();
             }
-
-            while (Interact.GetLastDigitOfTimer != (Interact.Dimension > 10 ? 19 : 9))
-                yield return true;
         }
     }
 }

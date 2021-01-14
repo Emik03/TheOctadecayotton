@@ -35,11 +35,11 @@ public class SphereScript : MonoBehaviour
     private IEnumerator UpdateValue()
     {
         _isUpdating = true;
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSecondsRealtime(0.02f);
+        yield return new WaitForSecondsRealtime(0.02f);
         _isUpdating = false;
 
-        Light.range = transform.localScale.x / 128;
+        Light.range = transform.localScale.x / 256;
         bool white = true;
 
         for (int i = 0; i < Interact.Dimension; i++)
@@ -54,7 +54,7 @@ public class SphereScript : MonoBehaviour
         Light.enabled = white;
         for (int i = 0; i < Mathf.Pow(FadeSpeed, 2) && !_isUpdating && !Octadecayotton.IsSolved; i++)
         {
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForSecondsRealtime(0.02f);
             SphereRenderer.material.color = SphereRenderer.material.color.Step(white ? Color.white : new Color(0.125f, 0.125f, 0.125f), FadeSpeed);
         }
     }
