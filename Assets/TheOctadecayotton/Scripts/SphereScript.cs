@@ -1,61 +1,67 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TheOctadecayotton;
 using UnityEngine;
 
 public class SphereScript : MonoBehaviour 
 {
 	public GameObject Sphere, Polygon;
-    public Renderer SphereRenderer;
-    public TheOctadecayottonScript Octadecayotton;
     public Light Light;
+    public Renderer SphereRenderer;
+    public Shader MainShader, SpecialShader;
+    public TheOctadecayottonScript Octadecayotton;
 
     internal Position pos;
     internal InteractScript Interact { private get; set; }
-    
-    private const int FadeSpeed = 20;
-    private bool _isUpdating;
+    internal List<Vector3> vectors = new List<Vector3>();
 
-    internal void HandleUpdate()
+    private bool _isUsingSpecialShader, _isUpdatingValue;
+
+    private void Start()
     {
-        if (Octadecayotton.Interact.isRotating || Octadecayotton.Interact.isStarting)
-            UpdateColor();
-
-        else if (Octadecayotton.Interact.isSubmitting)
-            StartCoroutine(UpdateValue());
+        _isUsingSpecialShader = Octadecayotton.Interact.Dimension > 9;
+        SphereRenderer.material.shader = _isUsingSpecialShader ? SpecialShader : MainShader;
+        if (!_isUsingSpecialShader)
+            StartCoroutine(UpdateColor());
     }
 
-    internal void UpdateColor()
+    private IEnumerator UpdateColor()
     {
-        SphereRenderer.material.color = new Color32(
-            (byte)(Mathf.Clamp(Sphere.transform.localPosition.x, 0, 1) * 255),
-            (byte)(Mathf.Clamp(Sphere.transform.localPosition.y, 0, 1) * 255),
-            (byte)(Mathf.Clamp(Sphere.transform.localPosition.z, 0, 1) * 255), 255);
-    }
-
-    private IEnumerator UpdateValue()
-    {
-        _isUpdating = true;
-        yield return new WaitForSecondsRealtime(0.02f);
-        yield return new WaitForSecondsRealtime(0.02f);
-        _isUpdating = false;
-
-        Light.range = transform.localScale.x / 256;
-        bool white = true;
-
-        for (int i = 0; i < Interact.Dimension; i++)
+        while (!Octadecayotton.Interact.isSubmitting || Octadecayotton.Interact.isStarting)
         {
-            if (pos.InitialPosition[i] != Octadecayotton.Interact.startingSphere[(Axis)i])
+            if (!_isUpdatingValue)
+                SphereRenderer.material.color = new Color(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z);
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    internal IEnumerator UpdateValue()
+    {
+        _isUpdatingValue = false;
+        yield return new WaitForSecondsRealtime(0.05f);
+        _isUpdatingValue = true;
+        Light.range = 0.875f / Mathf.Pow(Octadecayotton.Interact.Dimension, 2);
+
+        if (pos.InitialPosition.Where((n, i) => n == Octadecayotton.Interact.startingSphere[(Axis)i]).Count() == 0)
+        {
+            for (float i = 0; i <= 40 && _isUpdatingValue; i++)
             {
-                white = false;
-                break;
+                Light.enabled = true;
+                SphereRenderer.material.color = new Color(1, i / 40, i / 40);
+                yield return new WaitForSecondsRealtime(0.01f);
             }
         }
 
-        Light.enabled = white;
-        for (int i = 0; i < Mathf.Pow(FadeSpeed, 2) && !_isUpdating && !Octadecayotton.IsSolved; i++)
+        else
         {
-            yield return new WaitForSecondsRealtime(0.02f);
-            SphereRenderer.material.color = SphereRenderer.material.color.Step(white ? Color.white : new Color(0.125f, 0.125f, 0.125f), FadeSpeed);
+            for (float i = 40; i > 0 && _isUpdatingValue; i--)
+            {
+                Light.enabled = false;
+                SphereRenderer.material.color = new Color(i / 40, i / 40, i / 40);
+                yield return new WaitForSecondsRealtime(0.01f);
+            }
         }
+        _isUpdatingValue = false;
     }
 }

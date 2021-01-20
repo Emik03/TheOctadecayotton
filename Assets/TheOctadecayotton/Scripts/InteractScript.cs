@@ -16,7 +16,7 @@ public class InteractScript : MonoBehaviour
     internal Rotation[][][] Rotations { get; private set; }
     internal Dictionary<Axis, bool> AnchorSphere { get; private set; }
 
-    internal bool isRotating, isSubmitting, isActive, isStarting;
+    internal bool isRotating, isSubmitting, isActive, isStarting, isUsingBounce;
     internal int Dimension { get { return _dimension; } set { if (_dimension == 0) _dimension = Mathf.Clamp(value, 3, 12); } }
     internal int GetLastDigitOfTimer { get { return (int)GetPreciseLastDigitOfTimer; } }
     internal float GetPreciseLastDigitOfTimer { get { return Info.GetTime() % (Dimension > 10 ? 20 : 10); } }
@@ -24,7 +24,7 @@ public class InteractScript : MonoBehaviour
     internal Dictionary<Axis, bool> startingSphere = new Dictionary<Axis, bool>();
     internal static IEnumerable<Axis> allAxies = Enum.GetValues(typeof(Axis)).Cast<Axis>();
 
-    private bool _isUsingBounce;
+    private bool _isRotationsCached;
     private int _moduleId, _breakCount, _step, _stepRequired, _dimension;
     private Axis[] _order;
     private List<Axis> _inputs;
@@ -32,7 +32,7 @@ public class InteractScript : MonoBehaviour
     private Animate _animate;
     private TheOctadecayottonScript _octadecayotton;
 
-    internal KMSelectable.OnInteractHandler Init(TheOctadecayottonScript octadecayotton, int dimension, int rotation, int stepRequired, bool isUsingBounce)
+    internal KMSelectable.OnInteractHandler Init(TheOctadecayottonScript octadecayotton, int dimension)
     {
         return () =>
         {
@@ -40,25 +40,27 @@ public class InteractScript : MonoBehaviour
                 return true;
 
             isStarting = true;
+            _isRotationsCached = false;
             rotationProgress = 0;
+            _step = 0;
 
             _octadecayotton = octadecayotton;
             _animate = new Animate(this, _octadecayotton);
             _moduleId = octadecayotton.moduleId;
-            _stepRequired = stepRequired;
-            _isUsingBounce = isUsingBounce;
+            _stepRequired = octadecayotton.stepRequired;
+            isUsingBounce = octadecayotton.isUsingBounce;
 
             if (Dimension == 0)
                 TheOctadecayottonScript.Activated++;
-            Dimension = dimension + TheOctadecayottonScript.Activated;
+            Dimension = _octadecayotton.dimensionOverride == 0 ? dimension + TheOctadecayottonScript.Activated : octadecayotton.dimensionOverride;
 
             StartCoroutine(_animate.CreateHypercube(Dimension));
 
             octadecayotton.PlaySound(Dimension > 9 ? "StartupHard" : "Startup");
-            octadecayotton.ModuleSelectable.AddInteractionPunch(16);
+            octadecayotton.ModuleSelectable.AddInteractionPunch(Dimension > 9 ? 64 : 32);
 
             Rotations = !Application.isEditor || octadecayotton.ForceRotation.IsNullOrEmpty()
-                      ? TheOctadecayottonExtensions.GetRandomRotations(new RotationOptions(dimension: Dimension, rotationCount: rotation))
+                      ? TheOctadecayottonExtensions.GetRandomRotations(new RotationOptions(dimension: Dimension, rotationCount: octadecayotton.rotation))
                       : octadecayotton.ForceRotation.ToRotations();
 
             Debug.LogFormat("[The Octadecayotton #{0}]: Initalizing with {1} dimensions.", _moduleId, Dimension);
@@ -89,9 +91,9 @@ public class InteractScript : MonoBehaviour
         };
     }
 
-    internal KMSelectable.OnInteractHandler OnInteract(TheOctadecayottonScript octadecayotton, int dimension, int rotation, int stepRequired, bool isUsingBounce)
+    internal KMSelectable.OnInteractHandler OnInteract(TheOctadecayottonScript octadecayotton, int dimension)
     {
-        return Init(octadecayotton, dimension, rotation, stepRequired, isUsingBounce) + (() =>
+        return Init(octadecayotton, dimension) + (() =>
         {
             _octadecayotton.ModuleSelectable.AddInteractionPunch();
             _octadecayotton.PlaySound("InteractInterrupt");
@@ -129,39 +131,48 @@ public class InteractScript : MonoBehaviour
                 _octadecayotton.PlaySound("StartingSphere");
 
             for (int i = 0; i < Spheres.Count; i++)
-                Spheres[i].HandleUpdate();
+                Spheres[i].StartCoroutine(Spheres[i].UpdateValue());
 
             _inputs = new List<Axis>();
         }
 
-        if (!isActive || !isRotating || ++_step % _stepRequired != 0)
+        if (!isActive || !isRotating || (_isRotationsCached && (_step = ++_step % (Spheres[0].vectors.Count - 10)) % _stepRequired != 0))
             return;
 
-        if (Rotations.Length == 0)
-            isSubmitting = true;
-
-        if (rotationProgress >= Rotations.Length + 0.4f)
-            rotationProgress = 0;
-
-        if (rotationProgress < Rotations.Length || Rotations.Length == 0)
+        if (!_isRotationsCached && rotationProgress >= Rotations.Length + 0.5f)
         {
-            if (rotationProgress % 1 == 0)
-            {
-                if (isSubmitting)
-                {
-                    _octadecayotton.PlaySound("StartingSphere");
-                    isRotating = false;
-                }
-
-                for (int i = 0; i < Spheres.Count && Rotations.Length != 0; i++)
-                    Spheres[i].pos.SetRotation(Rotations[(int)rotationProgress]);
-            }
-
+            _isRotationsCached = true;
             for (int i = 0; i < Spheres.Count; i++)
-                Spheres[i].UpdateSphere(rotationProgress, _isUsingBounce);
+                Spheres[i].AddVector(rotationProgress, isUsingBounce);
+            rotationProgress = 0;
         }
 
-        rotationProgress += 1f / (256 / _stepRequired);
+        if (rotationProgress % 1 == 0 && _step == 0)
+        {
+            if (isSubmitting)
+            {
+                _inputs = new List<Axis>();
+                _octadecayotton.PlaySound("StartingSphere");
+                for (int i = 0; i < Spheres.Count; i++)
+                    Spheres[i].StartCoroutine(Spheres[i].UpdateValue());
+                isRotating = false;
+            }
+
+            if (!_isRotationsCached)
+                for (int i = 0; i < Spheres.Count && Rotations.Length != 0; i++)
+                    Spheres[i].pos.SetRotation(rotationProgress < Rotations.Length ? Rotations[(int)rotationProgress] : Rotations[0]);
+        }
+
+        if (_isRotationsCached)
+            for (int i = 0; i < Spheres.Count; i++)
+                Spheres[i].Sphere.transform.localPosition = Spheres[i].vectors[_step];
+        else
+        {
+            for (int i = 0; i < Spheres.Count; i++)
+                Spheres[i].AddVector(rotationProgress < Rotations.Length ? rotationProgress : 0, isUsingBounce);
+            rotationProgress += 1f / (256 / _stepRequired);
+        }
+
     }
 
     private void CreateStartingSphere()
@@ -214,8 +225,7 @@ public class InteractScript : MonoBehaviour
         {
             if (Spheres[i] == null)
                 continue;
-            Spheres[i].SphereRenderer.material.color = Color.gray;
-            Spheres[i].HandleUpdate();
+            Spheres[i].StartCoroutine(Spheres[i].UpdateValue());
         }
 
         return false;

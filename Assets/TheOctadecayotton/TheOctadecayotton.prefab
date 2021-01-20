@@ -394,12 +394,12 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 5
+  m_Intensity: 0.25
   m_Range: 0
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -479,9 +479,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Sphere: {fileID: 1466129040490230}
   Polygon: {fileID: 1793580340722296}
-  SphereRenderer: {fileID: 23469253184190426}
-  Octadecayotton: {fileID: 114483548890468804}
   Light: {fileID: 108831510854540484}
+  SphereRenderer: {fileID: 23469253184190426}
+  MainShader: {fileID: 4800000, guid: 3f0d4a2e325f9c24f8251b7b8534a096, type: 3}
+  SpecialShader: {fileID: 4800000, guid: 69331800da5b7074a83030d9fedfb798, type: 3}
+  Octadecayotton: {fileID: 114483548890468804}
 --- !u!114 &114245374481025758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -573,7 +575,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Settings: '{   "Dimensions": 9,   "HowToUse0": "Amount of dimensions, for accessibility/practice.
     By default 9, range 3-12. WARNING: Higher dimension may cause lag.",    "Rotations":
-    3,   "HowToUse1": "Amount of rotations, for accessibility/practice. By default
+    1,   "HowToUse1": "Amount of rotations, for accessibility/practice. By default
     3, range 0-100.",    "25FPS": false,   "HowToUse2": "Reduces rotation animation
     to be 25 frames per second for low end machines.",    "InOutBounce": false,   "HowToUse3":
     "Makes rotations use the InOutBounce ease, not suitable for serious play.",    "StretchToFit":

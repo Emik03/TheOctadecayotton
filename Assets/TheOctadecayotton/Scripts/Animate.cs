@@ -38,8 +38,6 @@ namespace TheOctadecayotton
                 instance.pos.SetDimensions(values);
                 instance.Interact = _interact;
 
-                instance.HandleUpdate();
-
                 float f = 100f / Mathf.Pow(dimension, 2);
                 instance.Sphere.transform.localScale = new Vector3(f, f, f);
 
@@ -58,7 +56,6 @@ namespace TheOctadecayotton
                             Rnd.Range(-0.01f, 0.01f) + 0.5f,
                             Rnd.Range(-0.01f, 0.01f) + 0.5f,
                             Rnd.Range(-0.01f, 0.01f) + 0.5f), progress.ElasticInOut());
-                        sphere.UpdateColor();
                     }
                     if (!(dimension == 8 && i % 2 != 0 || dimension == 9 && i % 4 != 0))
                         yield return new WaitForSecondsRealtime(0.02f);
@@ -73,11 +70,19 @@ namespace TheOctadecayotton
                 yield return new WaitForSecondsRealtime(0.02f);
             }
 
-            _interact.isRotating = _interact.isActive = true;
-            _interact.isStarting = _interact.isSubmitting = false;
+            _interact.isRotating = !(_interact.isSubmitting = _interact.Rotations.Length == 0);
+            _interact.isActive = true;
+            _interact.isStarting = false;
 
             foreach (var sphere in _interact.Spheres)
                 sphere.Light.enabled = false;
+
+            if (_interact.isSubmitting)
+            {
+                _octadecayotton.PlaySound("StartingSphere");
+                for (int i = 0; i < _interact.Spheres.Count; i++)
+                    _interact.Spheres[i].StartCoroutine(_interact.Spheres[i].UpdateValue());
+            }
         }
 
         internal IEnumerator DestroyHypercube()
@@ -96,16 +101,18 @@ namespace TheOctadecayotton
 
         internal IEnumerator Solve()
         {
-            _octadecayotton.IsSolved = true;
-            Debug.LogFormat("[The Octadecayotton #{0}]: Module disarmed.", _octadecayotton.moduleId);
-            _octadecayotton.PlaySound(_interact.Dimension > 9 ? "SolveHard" : "Solve");
-
             _interact.isActive = false;
             _interact.isRotating = false;
             _interact.isSubmitting = false;
 
+            yield return new WaitForSecondsRealtime(1);
+
+            _octadecayotton.IsSolved = true;
+            Debug.LogFormat("[The Octadecayotton #{0}]: Module disarmed.", _octadecayotton.moduleId);
+            _octadecayotton.PlaySound(_interact.Dimension > 9 ? "SolveHard" : "Solve");
+
             foreach (var sphere in _interact.Spheres)
-                sphere.UpdateColor();
+                sphere.SphereRenderer.material.color = new Color(sphere.transform.localPosition.x, sphere.transform.localPosition.y, sphere.transform.localPosition.z);
 
             bool shortTime = false;
             if (_octadecayotton.Info.GetTime() < 60)

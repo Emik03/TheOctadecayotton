@@ -76,10 +76,11 @@ namespace TheOctadecayotton
             return new Color(colorA.r + ((colorB.r - colorA.r) / divider), colorA.g + ((colorB.g - colorA.g) / divider), colorA.b + ((colorB.b - colorA.b) / divider), colorA.a + ((colorB.a - colorA.a) / divider));
         }
 
-        internal static void UpdateSphere(this SphereScript sphere, float rotation, bool bounce)
+        internal static void AddVector(this SphereScript sphere, float rotation, bool bounce)
         {
-            sphere.Sphere.transform.localPosition = sphere.pos.MergeDimensions(bounce ? (rotation % 1).InOutBounce() : Easing.InOutCubic(rotation % 1, 0, 1, 1));
-            sphere.HandleUpdate();
+            var vector = sphere.pos.MergeDimensions(bounce ? (rotation % 1).InOutBounce() : Easing.InOutCubic(rotation % 1, 0, 1, 1));
+            sphere.Sphere.transform.localPosition = vector;
+            sphere.vectors.Add(vector);
         }
 
         internal static Dictionary<TKey, TValue> Clone<TKey, TValue>(this Dictionary<TKey, TValue> dictionary)
