@@ -112,7 +112,7 @@ namespace TheOctadecayotton
             _octadecayotton.PlaySound(_interact.Dimension > 9 ? "SolveHard" : "Solve");
 
             foreach (var sphere in _interact.Spheres)
-                sphere.SphereRenderer.material.color = new Color(sphere.transform.localPosition.x, sphere.transform.localPosition.y, sphere.transform.localPosition.z);
+                sphere.SphereRenderer.material.color = Color.white;
 
             bool shortTime = false;
             if (_octadecayotton.Info.GetTime() < 60)

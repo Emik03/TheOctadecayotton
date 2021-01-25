@@ -36,7 +36,7 @@ public class InteractScript : MonoBehaviour
     {
         return () =>
         {
-            if (isStarting || isActive || octadecayotton.IsSolved)
+            if (isStarting || isActive || octadecayotton.IsSolved || !octadecayotton.isReadyToActivate)
                 return true;
 
             isStarting = true;
@@ -63,7 +63,7 @@ public class InteractScript : MonoBehaviour
                       ? TheOctadecayottonExtensions.GetRandomRotations(new RotationOptions(dimension: Dimension, rotationCount: octadecayotton.rotation))
                       : octadecayotton.ForceRotation.ToRotations();
 
-            Debug.LogFormat("[The Octadecayotton #{0}]: Initalizing with {1} dimensions.", _moduleId, Dimension);
+            Debug.LogFormat("[The Octadecayotton #{0}]: Initalizing with {1} dimensions and {2} rotations.", _moduleId, Dimension, octadecayotton.rotation);
             Debug.LogFormat("[The Octadecayotton #{0}]: NOTE: Rotations are cyclic, meaning that +X-Y+Z is the same as -Y+Z+X and +Z+X-Y!", _moduleId);
             Debug.LogFormat("[The Octadecayotton #{0}]: The rotations are {1}.",
                 _moduleId,
@@ -110,6 +110,12 @@ public class InteractScript : MonoBehaviour
         List<int[]> temp = startingSphere.GetAnswer(AnchorSphere, _axesUsed, _order, false).ToList();
         temp.Add(Enumerable.Range(0, Dimension).Reverse().ToArray());
         return flip ? temp.Select(c => c.Reverse().ToArray()).ToArray() : temp.ToArray();
+    }
+
+    private void Update()
+    {
+        // This is 
+        Shader.SetGlobalMatrix("_W2L", transform.worldToLocalMatrix);
     }
 
     private void FixedUpdate()
@@ -221,7 +227,7 @@ public class InteractScript : MonoBehaviour
         if (!_inputs.Contains((Axis)GetLastDigitOfTimer))
             _inputs.Add((Axis)GetLastDigitOfTimer);
 
-        for (int i = 0; i < Spheres.Count; i++)
+        for (int i = 0; i < Spheres.Count && !isRotating; i++)
         {
             if (Spheres[i] == null)
                 continue;

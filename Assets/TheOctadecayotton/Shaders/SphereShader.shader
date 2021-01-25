@@ -1,38 +1,60 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+﻿// As long as _W2L is assigned every frame, the color will be based on localPosition.
 
-// Simplified Diffuse shader. Differences from regular Diffuse one:
-// - no Main Color
-
-Shader "KT/SphereShader" {
-    Properties {
+Shader "KT/SphereShader"
+{
+    Properties
+    {
         _Color("Tint", Color) = (1,1,1,1)
     }
-    SubShader {
-        Tags { "IgnoreProjector" = "True" "RenderType" = "Transparent" }
-        LOD 150
- 
-        CGPROGRAM
-        #pragma surface surf Lambert
+    SubShader
+    {
+        Tags { "RenderType"="Opaque" }
 
-        fixed4 _Color;
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
 
-        struct Input {
-            float3 worldPos;
-        };
+            #include "UnityCG.cginc"
 
-        void vert(inout appdata_full v, out Input o) {
-            UNITY_INITIALIZE_OUTPUT(Input, o);
-            o.worldPos = v.vertex.xyz;
+            struct appdata
+            {
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct v2f
+            {
+                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
+                float4 localPos : TEXCOORD1;
+            };
+
+            float4x4 _W2L;
+            fixed4 _Color;
+
+            v2f vert (appdata v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = v.uv;
+
+                o.localPos = mul(_W2L, mul(unity_ObjectToWorld, float4(0, 0, 0, 1)));
+
+                return o;
+            }
+
+            float4 frag (v2f i) : SV_Target
+            {
+                float4 col = i.localPos;
+                return float4(
+                    (col.r + 0.05) * 7.5 * _Color.r,
+                    (col.g - 0.1) * 7.5 * _Color.g, 
+                    (col.b + 0.05) * 7.5 * _Color.b, 
+                    col.a);
+            }
+            ENDCG
         }
- 
-        void surf(Input IN, inout SurfaceOutput o) {
-            float3 c = mul(unity_ObjectToWorld, float4(IN.worldPos, 1)).rgb;
-            float r = _SinTime / 4;
-            float g = (clamp(c.g - 0.125, 0, 0.125) * 8);
-            float b = (clamp(c.r - 0.125, 0, 0.125) * 8);
-            o.Albedo = float3(r, g, b) * _Color;
-            o.Alpha = 0;
-        }
-        ENDCG
     }
 }

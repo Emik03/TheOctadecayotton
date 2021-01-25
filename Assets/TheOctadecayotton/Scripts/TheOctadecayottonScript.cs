@@ -17,7 +17,7 @@ public class TheOctadecayottonScript : MonoBehaviour
     public string ForceRotation;
     public string ForceStartingSphere;
 
-    internal bool isUsingBounce;
+    internal bool isUsingBounce, isReadyToActivate;
     internal static int ModuleIdCounter { get; private set; }
     internal static int Activated { get; set; }
     internal int moduleId, dimensionOverride, dimension, rotation, stepRequired;
@@ -28,6 +28,7 @@ public class TheOctadecayottonScript : MonoBehaviour
 
     private void Start()
     {
+        isReadyToActivate = true;
         Activated = 0;
         moduleId = ++ModuleIdCounter;
         ModSettingsJSON.Get(this, out dimension, out rotation, out stepRequired, out isUsingBounce, out stretchToFit);
@@ -39,16 +40,18 @@ public class TheOctadecayottonScript : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private const string TwitchHelpMessage = @"!{0} succumb (Activate module/Enter submission) | !{0} submit <#> <#> <#>... (Submits on digit #) | !{0} settings (Tells you additional commands to customize the module)";
+    private const string TwitchHelpMessage = @"!{0} succumb (Activate module/Enter submission) | !{0} submit <#> <#> <#>... (Submits on digit #) | !{0} settings (Shows additional settings)";
 #pragma warning restore 414
 
     private IEnumerator ProcessTwitchCommand(string command)
     {
+        isReadyToActivate = false;
         string[] split = command.Split();
 
         if (Regex.IsMatch(split[0], @"^\s*succumb\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
             yield return null;
+            isReadyToActivate = true;
             if (Interact.isSubmitting)
                 ModuleSelectable.OnInteract();
             else
@@ -67,7 +70,10 @@ public class TheOctadecayottonScript : MonoBehaviour
             split = split.Skip(1).ToArray();
             int n;
 
-            if (split.Length != 1)
+            if (Interact.Dimension != 0)
+                yield return "sendtochaterror Since the module has been activated at least once, this value can no longer change.";
+
+            else if (split.Length != 1)
                 yield return "sendtochaterror " + (split.Length == 0 ? "No arguments are specified. Expected: 0-100." : "Too many arguments are specified. Expected: 0-100.");
 
             else if (!int.TryParse(split[0], out n))
@@ -82,7 +88,7 @@ public class TheOctadecayottonScript : MonoBehaviour
             else
             {
                 rotation = n;
-                yield return "sendtochat This module now activates with " + n + " rotations.";
+                yield return "sendtochat This module now activates with " + n + (n == 1 ? "rotation." : "rotations.");
             }
         }
 
@@ -91,7 +97,7 @@ public class TheOctadecayottonScript : MonoBehaviour
             yield return null;
 
             if (Interact.Dimension != 0)
-                yield return "sendtochaterror Since the module has been activated at least once, this can no longer change.";
+                yield return "sendtochaterror Since the module has been activated at least once, this value can no longer change.";
 
             else
             {
@@ -105,7 +111,7 @@ public class TheOctadecayottonScript : MonoBehaviour
             yield return null;
 
             if (Interact.Dimension != 0)
-                yield return "sendtochaterror Since the module has been activated at least once, this can no longer change.";
+                yield return "sendtochaterror Since the module has been activated at least once, this value can no longer change.";
 
             else
             {
@@ -121,7 +127,7 @@ public class TheOctadecayottonScript : MonoBehaviour
             int n;
 
             if (Interact.Dimension != 0)
-                yield return "sendtochaterror Since the module has been activated at least once, this number can no longer change.";
+                yield return "sendtochaterror Since the module has been activated at least once, this value can no longer change.";
 
             else if (split.Length != 1)
                 yield return "sendtochaterror " + (split.Length == 0 ? "No arguments are specified. Expected: 3-12." : "Too many arguments are specified. Expected: 3-12.");
@@ -174,6 +180,8 @@ public class TheOctadecayottonScript : MonoBehaviour
                 }
             }
         }
+
+        isReadyToActivate = true;
     }
 
     private IEnumerator TwitchHandleForcedSolve()
