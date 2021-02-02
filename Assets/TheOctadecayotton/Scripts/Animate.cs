@@ -101,13 +101,14 @@ namespace TheOctadecayotton
 
         internal IEnumerator Solve()
         {
+            _octadecayotton.IsSolved = true;
+
             _interact.isActive = false;
             _interact.isRotating = false;
             _interact.isSubmitting = false;
 
             yield return new WaitForSecondsRealtime(1);
 
-            _octadecayotton.IsSolved = true;
             Debug.LogFormat("[The Octadecayotton #{0}]: Module disarmed.", _octadecayotton.moduleId);
             _octadecayotton.PlaySound(_interact.Dimension > 9 ? "SolveHard" : "Solve");
 
