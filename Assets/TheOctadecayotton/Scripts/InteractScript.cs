@@ -17,7 +17,7 @@ public class InteractScript : MonoBehaviour
     internal Dictionary<Axis, bool> AnchorSphere { get; private set; }
 
     internal bool isRotating, isSubmitting, isActive, isStarting, isUsingBounce;
-    internal int Dimension { get { return _dimension; } set { if (_dimension == 0) _dimension = Mathf.Clamp(value, 3, 12); } }
+    internal int Dimension { get { return _dimension; } set { if (_dimension == 0) _dimension = Mathf.Clamp(value, ModSettingsJSON.Min, ModSettingsJSON.Max); } }
     internal int GetLastDigitOfTimer { get { return (int)GetPreciseLastDigitOfTimer; } }
     internal float GetPreciseLastDigitOfTimer { get { return Info.GetTime() % (Dimension > 10 ? 20 : 10); } }
     internal float rotationProgress;
@@ -26,17 +26,18 @@ public class InteractScript : MonoBehaviour
 
     private bool _isRotationsCached;
     private int _moduleId, _breakCount, _step, _stepRequired, _dimension;
+    private string _allAxes = Enum.GetValues(typeof(Axis)).Cast<Axis>().Join("");
     private Axis[] _order;
     private List<Axis> _inputs;
     private Dictionary<Axis, int> _axesUsed = new Dictionary<Axis, int>();
     private Animate _animate;
     private TheOctadecayottonScript _octadecayotton;
 
-    internal KMSelectable.OnInteractHandler Init(TheOctadecayottonScript octadecayotton, int dimension)
+    internal KMSelectable.OnInteractHandler Init(TheOctadecayottonScript octadecayotton, bool checkForTP, int dimension)
     {
         return () =>
         {
-            if (isStarting || isActive || octadecayotton.IsSolved || !octadecayotton.isReadyToActivate)
+            if (isStarting || isActive || octadecayotton.IsSolved || (checkForTP && octadecayotton.TwitchPlaysActive))
                 return true;
 
             isStarting = true;
@@ -64,7 +65,7 @@ public class InteractScript : MonoBehaviour
                       : octadecayotton.ForceRotation.ToRotations();
 
             Debug.LogFormat("[The Octadecayotton #{0}]: Initalizing with {1} dimensions and {2} rotations.", _moduleId, Dimension, octadecayotton.rotation);
-            Debug.LogFormat("[The Octadecayotton #{0}]: NOTE: Rotations are cyclic, meaning that +X-Y+Z is the same as -Y+Z+X and +Z+X-Y!", _moduleId);
+            Debug.LogFormat("[The Octadecayotton #{0}]: NOTE: Rotations are cyclic, meaning that +X-Y+Z is the same as -Y+Z+X and +Z+X-Y! Commas (,) separate different subrotations, and ampersands (&) separate different rotations.", _moduleId);
             Debug.LogFormat("[The Octadecayotton #{0}]: The rotations are {1}.",
                 _moduleId,
                 Rotations.ToLog());
@@ -73,7 +74,7 @@ public class InteractScript : MonoBehaviour
             Debug.LogFormat("[The Octadecayotton #{0}]: The anchor sphere is in {1}. ({2}-ordered)",
                 _moduleId,
                 AnchorSphere.Select(a => a.Value ? "+" : "-").Join(""),
-                "XYZWVURSTOPQ".Substring(0, Dimension));
+                _allAxes.Substring(0, Dimension));
 
             CreateStartingSphere();
             Debug.LogFormat("[The Octadecayotton #{0}]: To solve this module, press anywhere to enter submission, submit the digits from left-to-right when the {1} matches the digit shown, then submit on every digit from {2} down to 0.",
@@ -91,9 +92,9 @@ public class InteractScript : MonoBehaviour
         };
     }
 
-    internal KMSelectable.OnInteractHandler OnInteract(TheOctadecayottonScript octadecayotton, int dimension)
+    internal KMSelectable.OnInteractHandler OnInteract(TheOctadecayottonScript octadecayotton, bool checkForTP, int dimension)
     {
-        return Init(octadecayotton, dimension) + (() =>
+        return Init(octadecayotton, checkForTP, dimension) + (() =>
         {
             _octadecayotton.ModuleSelectable.AddInteractionPunch();
             _octadecayotton.PlaySound("InteractInterrupt");
@@ -145,7 +146,7 @@ public class InteractScript : MonoBehaviour
         if (!isActive || !isRotating || (_isRotationsCached && (_step = ++_step % (Spheres[0].vectors.Count - 10)) % _stepRequired != 0))
             return;
 
-        if (!_isRotationsCached && rotationProgress >= Rotations.Length + 0.5f)
+        if (!_isRotationsCached && (rotationProgress >= Rotations.Length + 0.5f || (Rotations.Length == 1 && rotationProgress > 1)))
         {
             _isRotationsCached = true;
             for (int i = 0; i < Spheres.Count; i++)
@@ -208,7 +209,7 @@ public class InteractScript : MonoBehaviour
         Debug.LogFormat("[The Octadecayotton #{0}]: The starting sphere is in {1}. ({2}-ordered)",
             _moduleId,
             startingSphere.Select(a => a.Value ? "+" : "-").Join(""),
-            "XYZWVURSTOPQ".Substring(0, Dimension));
+            _allAxes.Substring(0, Dimension));
         _octadecayotton.souvenirRotations = Rotations.ToLog();
         _octadecayotton.souvenirSphere = startingSphere.ToLog();
     }

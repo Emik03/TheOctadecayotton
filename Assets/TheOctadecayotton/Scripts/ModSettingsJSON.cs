@@ -42,6 +42,12 @@ namespace TheOctadecayotton
         public bool StretchToFit { get; private set; }
 
         /// <summary>
+        /// Contains the min/max amount of dimensions. Do keep in mind that the Axis enum needs sufficient amount of elements, as well as the array in Position.cs if you ever plan on changing this.
+        /// WARNING: Changing the minimum value below 3 or maximum value above 20 requires large restructuring of the module's rules. Exactly 20 is also untested and may cause problems.
+        /// </summary>
+        public const int Min = 3, Max = 12;
+
+        /// <summary>
         /// Gets the value from ModSettings.
         /// </summary>
         /// <param name="octadecayotton">The instance of the module.</param>
@@ -65,7 +71,7 @@ namespace TheOctadecayotton
                 // Do settings exist?
                 if (settings != null)
                 {
-                    dimension = Mathf.Clamp(settings.Dimension, 3, 12);
+                    dimension = Mathf.Clamp(settings.Dimension, Min, Max);
                     rotation = Mathf.Clamp(settings.Rotation, 0, 100);
                     stepRequired = settings.LowFPS.AsInt() + 1;
                     isUsingBounce = settings.IsUsingBounce;

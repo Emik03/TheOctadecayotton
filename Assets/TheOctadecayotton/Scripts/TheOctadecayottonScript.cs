@@ -17,24 +17,23 @@ public class TheOctadecayottonScript : MonoBehaviour
     public string ForceRotation;
     public string ForceStartingSphere;
 
-    internal bool isUsingBounce, isReadyToActivate;
+    internal bool isUsingBounce;
     internal static int ModuleIdCounter { get; private set; }
     internal static int Activated { get; set; }
     internal int moduleId, dimensionOverride, dimension, rotation, stepRequired;
     internal static bool stretchToFit;
     internal bool IsSolved { get; set; }
-    internal bool ZenModeActive;
+    internal bool ZenModeActive, TwitchPlaysActive;
     internal string souvenirSphere, souvenirRotations;
 
     private void Start()
     {
-        isReadyToActivate = true;
         Activated = 0;
         moduleId = ++ModuleIdCounter;
         ModSettingsJSON.Get(this, out dimension, out rotation, out stepRequired, out isUsingBounce, out stretchToFit);
         
-        ModuleSelectable.OnInteract += Interact.Init(this, dimension - Info.GetSolvableModuleNames().Where(i => i == "The Octadecayotton").Count());
-        SubModuleSelectable.OnInteract += Interact.OnInteract(this, dimension - Info.GetSolvableModuleNames().Where(i => i == "The Octadecayotton").Count());
+        ModuleSelectable.OnInteract += Interact.Init(this, true, dimension - Info.GetSolvableModuleNames().Where(i => i == "The Octadecayotton").Count());
+        SubModuleSelectable.OnInteract += Interact.OnInteract(this, false, dimension - Info.GetSolvableModuleNames().Where(i => i == "The Octadecayotton").Count());
         SubModuleSelectable.OnHighlight += () => SelectableRenderer.enabled = true;
         SubModuleSelectable.OnHighlightEnded += () => SelectableRenderer.enabled = false;
     }
@@ -45,17 +44,12 @@ public class TheOctadecayottonScript : MonoBehaviour
 
     private IEnumerator ProcessTwitchCommand(string command)
     {
-        isReadyToActivate = false;
         string[] split = command.Split();
 
         if (Regex.IsMatch(split[0], @"^\s*succumb\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
             yield return null;
-            isReadyToActivate = true;
-            if (Interact.isSubmitting)
-                ModuleSelectable.OnInteract();
-            else
-                SubModuleSelectable.OnInteract();
+            SubModuleSelectable.OnInteract();
         }
 
         else if (Regex.IsMatch(split[0], @"^\s*settings\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
@@ -88,7 +82,7 @@ public class TheOctadecayottonScript : MonoBehaviour
             else
             {
                 rotation = n;
-                yield return "sendtochat This module now activates with " + n + (n == 1 ? "rotation." : "rotations.");
+                yield return "sendtochat This module now activates with " + n + (n == 1 ? " rotation." : " rotations.");
             }
         }
 
@@ -180,8 +174,6 @@ public class TheOctadecayottonScript : MonoBehaviour
                 }
             }
         }
-
-        isReadyToActivate = true;
     }
 
     private IEnumerator TwitchHandleForcedSolve()

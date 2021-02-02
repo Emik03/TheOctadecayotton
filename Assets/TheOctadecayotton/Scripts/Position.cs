@@ -34,7 +34,12 @@ internal class Position
         // R = 6, S = 7, T = 8
         { 2, 0.125f, 0.125f }, { 0.125f, 0.125f, 2, }, { 0.125f, 2, 0.125f },
         // O = 9, P = 10, Q = 11
-        { 0.125f, 0.05f, 3.2f }, { 0.05f, 3.2f, 0.125f, }, { 3.2f, 0.125f, 0.05f }
+        { 0.125f, 0.05f, 3.2f }, { 0.05f, 3.2f, 0.125f, }, { 3.2f, 0.125f, 0.05f },
+        // THESE DIMENSIONS ARE UNUSED; THIS IS A PROOF OF CONCEPT
+        // L = 12, M = 13, N = 14
+        { 4, 2, 1 }, { 1, 4, 2, }, { 2, 1, 4 },
+        // I = 15, J = 16, K = 17
+        { .5f, .5f, .5f }
     };
 
     internal bool[] InitialPosition { get; private set; }
