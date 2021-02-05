@@ -179,7 +179,7 @@ public class TheOctadecayottonScript : MonoBehaviour
     private IEnumerator TwitchHandleForcedSolve()
     {
         if (!Interact.isActive)
-            ModuleSelectable.OnInteract();
+            SubModuleSelectable.OnInteract();
         while (!Interact.isActive)
             yield return true;
 

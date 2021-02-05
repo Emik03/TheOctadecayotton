@@ -126,7 +126,7 @@ namespace TheOctadecayotton
             yield return ShuffleSpheres(1 / 512f);
 
             if (!shortTime)
-            _octadecayotton.Module.HandlePass();
+                _octadecayotton.Module.HandlePass();
 
             yield return DestroyHypercube();
         }

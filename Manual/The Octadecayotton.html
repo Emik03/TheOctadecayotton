@@ -205,7 +205,7 @@
                     </li>
                     <li>Each sphere is color-coded based on how positive it is on the X, Y, and Z plane. With red taking
                         X (right), green taking Y (towards), and blue taking Z (up). A sphere with all axes positive is
-                        fully white, and a sphere with all axes negative is
+                        fully (or as close to) white, and a sphere with all axes negative is
                         fully black.
                         <ul>
                             <li>Additive color mixing is used, meaning that high amounts of X and Z will result in
@@ -320,7 +320,8 @@
                         certain axis.
                         <ul>
                             <li>For example, if a sphere is located exactly (0.8, 0.2, 0.5) left/away/down from
-                                another one, the first sphere is located in -W, because it has a +W neighbour.</li>
+                                another one, the first sphere is located in -W, because it has a +W neighbour, being
+                                further left/away/down than what could've been with W.</li>
                         </ul>
                     </li>
                 </ul>
@@ -346,18 +347,25 @@
                 <h3>Identifying Neighbours</h3>
                 <ul>
                     <li>To the diagram to the right shows on example of a sphere's <span class="dim-number"></span>
-                        neighbours as seen from the front.
+                        neighbours as seen from the front, zoomed in to the bottom-left quarter of the cube.
                         <ul>
                             <li>For clarity, the highlighted unfilled spheres are the neighbours of the filled sphere.
                             </li>
                         </ul>
                     </li>
+                    <li id="dim-exactly-3">It is important to note that neighbours by definition will be 1
+                        positive/negative away from the original.
+                        <ul>
+                            <li>With a 2-dimensional square, the bottom-left neighbours
+                                with the bottom-right, since the only difference is X. The bottom-left is also
+                                neighbouring top-left from Z.</li>
+                        </ul>
+                    </li>
                     <li>The Y axis cannot be seen from this angle; the positive Y axis points towards the viewer, as
                         do the other axes when viewed from a different angle.
                         <ul>
-                            <li>This means that every sphere shown in the
-                                diagram is actually showing 2 spheres, one closer to the viewer, and another further
-                                away, both stacked on top of each other.</li>
+                            <li>This means that every sphere shown in the diagram is actually showing 2 spheres, one
+                                closer to the viewer, and another further away, both stacked on top of each other.</li>
                         </ul>
                     </li>
                     <li>In reading order (left-to-right then top-to-bottom), the spheres are <span
@@ -373,9 +381,6 @@
                     <li>Determine whether the axis is positive or negative by envisioning an arrow going from one sphere
                         to the other. If the arrow points right/towards/up it's positive, if it's left/away/down it's
                         negative.</li>
-                    <li>After determining their relation to each other, watch them transform.</li>
-                    <li>If these 2 spheres are now neighboured from a different axis (rotation) or the same axis
-                        but negative (reflection), that implies a transformation.</li>
                 </ul>
             </div>
             <div class="page-footer relative-footer"></div>
@@ -388,14 +393,28 @@
             <div class="page-content">
                 <h3>Identifying Transformations (...continued)</h3>
                 <ul>
-                    <li>Record the new axis that they transformed into, and repeat this process starting with the new
-                        axis until the first initial axis is reached.<ul>
-                            <li>An example would be take axis X, +X goes to +Z, take axis Z, +Z goes to -Y, take axis
-                                Y, +Y goes to +X. X has been reached.</li>
+
+                    <li>After determining their relation to each other, watch them transform.
+                        <ul>
+                            <li>If these 2 spheres are now neighboured from a different axis (rotation) or the same axis
+                                but negative (reflection), that implies a transformation.</li>
                         </ul>
                     </li>
+                    <li>Record the new axis that they transformed into, and repeat this process starting with the new
+                        axis until the first initial axis is reached.
+                        <ul>
+                            <li>An example would be take axis +X, +X goes to +Z, take axis +Z, +Z goes to -Y, take axis
+                                -Y, -Y goes to -X. X has now been reached.</li>
+                        </ul>
+                    </li>
+                    <li>Every subtransformation has anywhere from 1 to 5 axes involved.</li>
                     <li>For any negative initial axis, invert both the initial and new axis. (positive ->
-                        negative, negative -> positive)</li>
+                        negative, negative -> positive)
+                        <ul>
+                            <li>Back to the example, "-Y goes to -X" becomes "+Y goes to +X".</li>
+                        </ul>
+                    </li>
+
                     <li>When the first initial axis has been reached, discard all of the initial axes, reverse their
                         order, and combine them.
                         <ul>
@@ -409,11 +428,10 @@
                         effect on individual sphere's paths, the axes that transform do not, as any axis can only be in
                         1 subtransformation at any time.</li>
                     </li>
-                    <li>Every subtransformation has anywhere from 1 to 5 axes involved.</li>
                     <li>Every transformation has anywhere from 1 to 5 subtransformations.</li>
-                    <li>Once all subtransformations are identified, that transformation is no longer needs to be looked
-                        at. Repeat the process for all other transformations to get a list of transformations containing
-                        subtransformations containing one or multiple axes.</li>
+                    <li>Once all subtransformations are identified, that transformation no longer needs to be looked at.
+                        Repeat the process for all other transformations to get a list of transformations containing
+                        one or more subtransformations containing one or more axes.</li>
                 </ul>
             </div>
             <div class="page-footer relative-footer"></div>
@@ -426,14 +444,16 @@
             <div class="page-content">
                 <h3>Primary Values</h3>
                 <ul>
-                    <li>All transformations and subtransformations have a primary value. Within each subtransformation,
-                        create a list of every possible pair of axes from itself and the next axis. (including the last
-                        and first axis as a pair*)
+                    <li>If there are 0 transformations, skip this page. All primary values are 0.</li>
+                    <li>All transformations have a primary value. On each subtransformation, create a list of every
+                        possible pair of axes from itself and the next axis. (including the last <u>THEN</u> the first
+                        axis as a pair*)
                         <ul>
                             <li>If the subtransformation is only 1 axis (reflection), ignore the above rule and
                                 make only 1 pair of the axis repeated twice.</li>
                         </ul>
                     </li>
+                    <li>There will always be the same number of pairs as there are axes in the subtransformation.</li>
                     <li>For each pair, get the value from the table, using the first letter as the row and the second
                         letter as the column.
                         <ul>
@@ -689,7 +709,7 @@
                 <h3>Primary Values (...continued)</h3>
                 <ul>
                     <li>For each transformation, take the absolute value of the sum of all pair results from every
-                        subtransformation<span id="dim-modulo"></span>. This is the primary value of that
+                        subtransformation <span id="dim-modulo"></span>. This is the primary value of that
                         transformation. Later in this manual, whenever p<sub>x</sub> is used, it refers to the primary
                         value of the x<sup>th</sup> transformation.</li>
                 </ul>
@@ -697,7 +717,7 @@
                 <h3>The Anchor Sphere</h3>
                 <ul>
                     <li>If there are 0 transformations, skip the next 2 pages. The anchor sphere is located completely
-                        negatively.</li>
+                        negatively. (or black)</li>
                     <li>For each transformation, create a<sub>x</sub>, where x is the transformation number. All of them
                         start with
                         the value <span class="dim-a-start"></span>.</li>
@@ -892,7 +912,7 @@
                             class="dim-submit-time"></span>, it will try submitting the <span
                             class="dim-axis-queue"></span>. The queue is cleared if any other number of axes are queued.
                     </li>
-                    <li>The starting sphere goes to the other side of all <span class="dim-axis-queue"></span> that were
+                    <li>The starting sphere goes to the other side of the <span class="dim-axis-queue"></span> that were
                         submitted.</li>
                     <li>During this submission, all axes can only be submitted up to 2 times.
                         <ul>
@@ -939,6 +959,7 @@
         const dimModulo = document.getElementById('dim-modulo');
         const dimModuloExplanation = document.getElementById('dim-modulo-explanation');
 
+        const dimExactly3 = document.getElementById('dim-exactly-3');
         const dimExactly4 = document.getElementById('dim-exactly-4');
         const dimExceed4 = document.querySelectorAll('.dim-exceed-4');
         const dimExceed5 = document.querySelectorAll('.dim-exceed-5');
@@ -1009,7 +1030,8 @@
             dimModulo.innerHTML = index + 3 < 6 ? 'modulo ' + Math.pow(2, index + 3) + ' ' : '';
             dimModuloExplanation.innerHTML = index + 3 < 6 ? '<sup><i>* Modulo is to add/subtract the right number until the left is non-negative, and less than the right.</i></sup></span>' : '';
 
-            dimExactly4.innerHTML = index + 3 === 4 ? 'Submitting an axis that has been submitted twice or more times causes a soft-strike. Only the 5<sup>th</sup> soft-strike causes a strike on the bomb, and resets the module.' : 'Submitting an axis that has been submitted twice or more times causes a soft-strike. Only the 4<sup>th</sup> soft-strike causes a strike on the bomb, and resets the module.';
+            dimExactly3.style.display = index + 3 === 3 ? '' : 'none';
+            dimExactly4.innerHTML = index + 3 === 4 ? 'Submitting an axis that has been submitted twice or more times causes a soft-strike. Only the 6<sup>th</sup> soft-strike causes a strike on the bomb, and resets the module.' : 'Submitting an axis that has been submitted twice or more times causes a soft-strike. Only the 5<sup>th</sup> soft-strike causes a strike on the bomb, and resets the module.';
             for (let i = 0; i < dimExceed4.length; i++)
                 dimExceed4[i].style.display = index + 3 >= 4 ? '' : 'none';
             for (let i = 0; i < dimExceed5.length; i++)
