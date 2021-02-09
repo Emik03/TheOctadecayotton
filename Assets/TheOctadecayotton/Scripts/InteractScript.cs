@@ -64,10 +64,15 @@ public class InteractScript : MonoBehaviour
                       ? TheOctadecayottonExtensions.GetRandomRotations(new RotationOptions(dimension: Dimension, rotationCount: octadecayotton.rotation))
                       : octadecayotton.ForceRotation.ToRotations();
 
-            Debug.LogFormat("[The Octadecayotton #{0}]: Initalizing with {1} dimensions and {2} rotations.", _moduleId, Dimension, octadecayotton.rotation);
-            Debug.LogFormat("[The Octadecayotton #{0}]: NOTE: Rotations are cyclic, meaning that +X-Y+Z is the same as -Y+Z+X and +Z+X-Y! Commas (,) separate different subrotations, and ampersands (&) separate different rotations.", _moduleId);
-            Debug.LogFormat("[The Octadecayotton #{0}]: The rotations are {1}.",
+            Debug.LogFormat("[The Octadecayotton #{0}]: Initializing with {1} dimensions and {2} rotation{3}.",
                 _moduleId,
+                Dimension,
+                octadecayotton.rotation,
+                octadecayotton.rotation == 1 ? "" : "s");
+            Debug.LogFormat("[The Octadecayotton #{0}]: NOTE: Rotations are cyclic, meaning that +X-Y+Z is the same as -Y+Z+X and +Z+X-Y! Commas (,) separate different subrotations, and ampersands (&) separate different rotations.", _moduleId);
+            Debug.LogFormat("[The Octadecayotton #{0}]: The rotation{1} {2}.",
+                _moduleId,
+                octadecayotton.rotation == 1 ? " is" : "s are",
                 Rotations.ToLog());
 
             AnchorSphere = Rotations.Get(Dimension, _moduleId);

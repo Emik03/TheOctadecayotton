@@ -202,14 +202,13 @@
                                 while the bottom-right sphere would be +X and -Z.</li>
                         </ul>
                     </li>
-                    </li>
                     <li>Each sphere is color-coded based on how positive it is on the X, Y, and Z plane. With red taking
                         X (right), green taking Y (towards), and blue taking Z (up). A sphere with all axes positive is
                         fully (or as close to) white, and a sphere with all axes negative is
                         fully black.
                         <ul>
-                            <li>Additive color mixing is used, meaning that high amounts of X and Z will result in
-                                magenta.</li>
+                            <li>Additive color mixing is used, meaning that high amounts of X and Z, but low amounts of
+                                Y will result in approximately magenta.</li>
                         </ul>
                     </li>
                 </ul>
@@ -246,18 +245,18 @@
                 <table style="text-align:right;">
                     <tr class="odd">
                         <th>+</th>
-                        <td>X</th>
-                        <td>Y</th>
-                        <td>Z</th>
-                        <td>W</th>
-                        <td class="dim-exceed-5">V</th>
-                        <td class="dim-exceed-6">U</th>
-                        <td class="dim-exceed-7">R</th>
-                        <td class="dim-exceed-8">S</th>
-                        <td class="dim-exceed-9">T</th>
-                        <td class="dim-exceed-10">O</th>
-                        <td class="dim-exceed-11">P</th>
-                        <td class="dim-exceed-12">Q</th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Z</th>
+                        <th>W</th>
+                        <th class="dim-exceed-5">V</th>
+                        <th class="dim-exceed-6">U</th>
+                        <th class="dim-exceed-7">R</th>
+                        <th class="dim-exceed-8">S</th>
+                        <th class="dim-exceed-9">T</th>
+                        <th class="dim-exceed-10">O</th>
+                        <th class="dim-exceed-11">P</th>
+                        <th class="dim-exceed-12">Q</th>
                     </tr>
                     <tr>
                         <th>X</th>
@@ -423,15 +422,19 @@
                                 to be reversed, getting +X, -Y, and +Z. Finally, combine them, getting +X-Y+Z.</li>
                         </ul>
                     <li>The resulting sequence is called a subtransformation. In a given transformation there can be
-                        multiple simulatenous subtransformations happening at the same time.</li>
+                        1 to 5 simulatenous subtransformations happening at the same time.</li>
                     <li>These subtransformations are completely isolated from each other, as while they do have an
-                        effect on individual sphere's paths, the axes that transform do not, as any axis can only be in
-                        1 subtransformation at any time.</li>
+                        effect on the individual sphere's paths, the axes do not, as any axis can only be in 1
+                        subtransformation at any time.</li>
+                    <li>Subtransformations have multiple ways to be spelled because they are cylical (they have no
+                        beginning or end, and one element affects the next), and subtransformations do not have a
+                        concrete order to each other. However, the module does not require either case.
+                        <ul>
+                            <li>+X-Y+Z could be spelled as -Y+Z+X (shift 1 left) and +Z+X-Y (shift 1 right), but not
+                                +Z-Y+X (backwards) or +X+Y+Z (inverted negativity), since the order, or
+                                positivity/negativity is wrong.</li>
+                        </ul>
                     </li>
-                    <li>Every transformation has anywhere from 1 to 5 subtransformations.</li>
-                    <li>Once all subtransformations are identified, that transformation no longer needs to be looked at.
-                        Repeat the process for all other transformations to get a list of transformations containing
-                        one or more subtransformations containing one or more axes.</li>
                 </ul>
             </div>
             <div class="page-footer relative-footer"></div>
@@ -901,7 +904,7 @@
                         played to indicate that it is ready to be interacted with.</li>
                     <li>Each time the module is paused, a random sphere is chosen. This is called the <u>starting
                             sphere</u>. The starting sphere will glow.</li>
-                    <li>The goal is to get the starting sphere to be on the same location as the anchor sphere.</li>
+                    <li>The goal is to get that glowing sphere to be on the same location as the anchor sphere.</li>
                 </ul>
                 <h3>Navigation</h3>
                 <ul>
@@ -912,7 +915,7 @@
                             class="dim-submit-time"></span>, it will try submitting the <span
                             class="dim-axis-queue"></span>. The queue is cleared if any other number of axes are queued.
                     </li>
-                    <li>The starting sphere goes to the other side of the <span class="dim-axis-queue"></span> that were
+                    <li>The glowing sphere goes to the other side of the <span class="dim-axis-queue"></span> that were
                         submitted.</li>
                     <li>During this submission, all axes can only be submitted up to 2 times.
                         <ul>
@@ -920,7 +923,7 @@
                             <li>The module gives no indication of any soft-strikes.</li>
                         </ul>
                     </li>
-                    <li>When the starting sphere is in the same position as the anchor sphere, submit all <span
+                    <li>When the glowing sphere is in the same position as the anchor sphere, submit all <span
                             class="dim-number"></span> axes. The module will strike or solve accordingly.
                         <ul>
                             <li>Striking will reset the module.</li>
@@ -974,7 +977,8 @@
         const dimMod32 = document.querySelectorAll('.dim-mod3-2');
 
         dimension.addEventListener('change', (event) => onChange(event.target.value));
-        onChange('9');
+        dimension.addEventListener('onload', (event) => onChange(event.target.value));
+        onChange(dimension.value);
 
         function onChange(dim) {
             const index = Number(dim) - 3;
@@ -1027,7 +1031,7 @@
                 dima0Set4[i].innerHTML = ['huh?', 'set the 4<sup>th</sup> digit', 'set the 4<sup>th</sup> digit', 'huh?', 'set the 7<sup>th</sup> digits', 'set the 7<sup>th</sup> and 8<sup>th</sup> digits', 'huh?', 'set the 10<sup>th</sup> digit', 'set the 10<sup>th</sup> digit', 'huh?'][index];
             for (let i = 0; i < dima0Set5.length; i++)
                 dima0Set5[i].innerHTML = ['huh?', 'huh?', 'set the 5<sup>th</sup> digit', 'huh?', 'huh?', 'huh?', 'huh?', 'huh?', 'huh?', 'huh?'][index];
-            dimModulo.innerHTML = index + 3 < 6 ? 'modulo ' + Math.pow(2, index + 3) + ' ' : '';
+            dimModulo.innerHTML = index + 3 < 6 ? 'modulo ' + Math.pow(2, index + 3) : '';
             dimModuloExplanation.innerHTML = index + 3 < 6 ? '<sup><i>* Modulo is to add/subtract the right number until the left is non-negative, and less than the right.</i></sup></span>' : '';
 
             dimExactly3.style.display = index + 3 === 3 ? '' : 'none';

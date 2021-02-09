@@ -76,7 +76,7 @@ namespace TheOctadecayotton
                     stepRequired = settings.LowFPS.AsInt() + 1;
                     isUsingBounce = settings.IsUsingBounce;
                     stretchToFit = settings.StretchToFit;
-                    Debug.LogFormat("[The Octadecayotton #{0}]: JSON loaded successfully, values are: [Dimensions = {1}], [Rotations = {2}], [25FPS: {3}], [InOutBounce: {4}], and [StretchToFit: {5}].",
+                    Debug.LogFormat("[The Octadecayotton #{0}]: JSON loaded successfully, values are: (Dimensions = {1}), (Rotations = {2}), (25FPS: {3}), (InOutBounce: {4}), and (StretchToFit: {5}).",
                         octadecayotton.moduleId,
                         dimension,
                         rotation,
