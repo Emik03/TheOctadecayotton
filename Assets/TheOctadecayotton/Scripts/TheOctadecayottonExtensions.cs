@@ -76,13 +76,6 @@ namespace TheOctadecayotton
             return new Color(colorA.r + ((colorB.r - colorA.r) / divider), colorA.g + ((colorB.g - colorA.g) / divider), colorA.b + ((colorB.b - colorA.b) / divider), colorA.a + ((colorB.a - colorA.a) / divider));
         }
 
-        internal static void AddVector(this SphereScript sphere, float rotation, bool bounce)
-        {
-            var vector = sphere.pos.MergeDimensions(bounce ? (rotation % 1).InOutBounce() : Easing.InOutCubic(rotation % 1, 0, 1, 1));
-            sphere.Sphere.transform.localPosition = vector;
-            sphere.vectors.Add(vector);
-        }
-
         internal static Dictionary<TKey, TValue> Clone<TKey, TValue>(this Dictionary<TKey, TValue> dictionary)
         {
             return dictionary.ToDictionary(e => e.Key, e => e.Value);
@@ -118,7 +111,7 @@ namespace TheOctadecayotton
               : (float)(Math.Pow(2, -20 * x + 10) * Math.Sin((20 * x - 11.125) * c5)) / 2 + 1;
         }
 
-        internal static Vector3 ToVector3(this bool[] pos, int dimensions)
+        internal static Vector3 ToVector3(this bool[] pos, int dimensions, bool stretchToFit)
         {
             float x = 0, y = 0, z = 0;
             for (int i = 0; i < pos.Length; i++)
@@ -135,7 +128,7 @@ namespace TheOctadecayotton
                 zMax += Position.weights[i, 2];
             }
             float max = Math.Max(xMax, Math.Max(yMax, zMax));
-            return TheOctadecayottonScript.stretchToFit
+            return stretchToFit
                 ? new Vector3(x / xMax, y / yMax, z / zMax)
                 : new Vector3(x / max, y / max, z / max);
         }
@@ -151,7 +144,7 @@ namespace TheOctadecayotton
                 var possibleAxies = new Stack<Axis>(allAxies.ToArray().Shuffle());
 
                 for (int j = 0; j < options.MinRotations ||
-                    (j < options.MaxRotations && possibleAxies.Count > 0 && 
+                    (j < options.MaxRotations && possibleAxies.Count >= options.MinLengthPerRotation && 
                     (Rnd.Range(0, 1f) <= options.ChanceToRepeat || j == 0)); j++)
                     AddRandomRotations(output, possibleAxies, options, ref i, ref j);
             }
@@ -165,6 +158,7 @@ namespace TheOctadecayotton
             int rnd = Rnd.Range(options.MinLengthPerRotation,
                 Math.Min(Math.Min(possibleAxies.Count, options.MaxLengthPerRotation), possibleAxies.Count() - options.MinRotations + 1) + 1);
 
+            Debug.Log(rnd + "  " + possibleAxies.Join(", "));
             for (int k = 0; k < rnd; k++)
                 output[i][j].Add(new Rotation(Rnd.Range(0, 1f) > options.ChanceForNegativeRotation, possibleAxies.Pop()));
 

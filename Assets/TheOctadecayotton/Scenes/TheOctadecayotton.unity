@@ -186,21 +186,36 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4664797253376566, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4664797253376566, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.0053
+      objectReference: {fileID: 0}
+    - target: {fileID: 4664797253376566, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4664797253376566, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4664797253376566, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4664797253376566, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4664797253376566, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4664797253376566, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3, type: 2}
       propertyPath: m_RootOrder
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114626008949226780, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3,
-        type: 2}
-      propertyPath: Settings
-      value: '{   "Dimensions": 5,   "HowToUse0": "Amount of dimensions, for accessibility/practice.
-        By default 9, range 3-12. WARNING: Higher dimension may cause lag.",    "Rotations":
-        1,   "HowToUse1": "Amount of rotations, for accessibility/practice. By default
-        3, range 0-100.",    "25FPS": false,   "HowToUse2": "Reduces rotation animation
-        to be 25 frames per second for low end machines.",    "InOutBounce": false,   "HowToUse3":
-        "Makes rotations use the InOutBounce ease, not suitable for serious play.",    "StretchToFit":
-        false,   "HowToUse4": "Stretches the individual X, Y, and Z axes on the tesseract
-        to always take up the entire module. This does cause proportions to be skewed."
-        }'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff9ca9050f0cb3c4e88109c0c3f0e8a3, type: 2}

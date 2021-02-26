@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Rnd = UnityEngine.Random;
 
@@ -24,19 +25,15 @@ namespace TheOctadecayotton
 
             for (int i = 0; i < Math.Pow(2, dimension); i++)
             {
-                float[] values = new float[dimension];
-                for (int j = 0; j < dimension; j++)
-                    values[j] = i / (int)Math.Pow(2, j) % 2;
-
                 var instance = UnityEngine.Object.Instantiate(_interact.Sphere, _interact.Polygon.transform, false).GetComponent<SphereScript>();
-
                 instance.gameObject.SetActive(true);
                 instance.pos = new Position(deviations: new[]
                 {
                     Rnd.Range(-1f, 1f), Rnd.Range(-1f, 1f), Rnd.Range(-1f, 1f)
-                });
-                instance.pos.SetDimensions(values);
+                }, stretchToFit: _octadecayotton.stretchToFit);
+                instance.pos.SetDimensions(Convert.ToString(i, 2).PadLeft(dimension, '0').Select(c => float.Parse(c.ToString())).ToArray());
                 instance.Interact = _interact;
+                instance.SphereRenderer.material.shader = _octadecayotton.colorAssist ? _interact.AssistShader : _interact.Shader;
 
                 float f = 100f / Mathf.Pow(dimension, 2);
                 instance.Sphere.transform.localScale = new Vector3(f, f, f);
@@ -75,7 +72,10 @@ namespace TheOctadecayotton
             _interact.isStarting = false;
 
             foreach (var sphere in _interact.Spheres)
+            { 
                 sphere.Light.enabled = false;
+                sphere.SphereRenderer.material.color = new Color(sphere.transform.localPosition.x, sphere.transform.localPosition.y, sphere.transform.localPosition.z);
+            }
 
             if (_interact.isSubmitting)
             {

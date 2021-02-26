@@ -5,10 +5,11 @@ using UnityEngine;
 
 internal class Position
 {
-    internal Position(float[] deviations)
+    internal Position(float[] deviations, bool stretchToFit)
     {
         const float MaxDeviation = 0.00001f;
         _deviations = deviations.Select(f => f * MaxDeviation).ToArray();
+        _stretchToFit = stretchToFit;
     }
 
     internal float[] Dimensions
@@ -43,8 +44,9 @@ internal class Position
     };
 
     internal bool[] InitialPosition { get; private set; }
-    internal bool[] NewPosition { get; set; }
+    internal bool[] NewPosition { get; private set; }
 
+    private bool _newVectorReady, _stretchToFit;
     private readonly float[] _deviations;
     private float[] _dimensions;
     private Vector3 _initialVector, _newVector;
@@ -82,18 +84,21 @@ internal class Position
             InitialPosition[i] = vs[i] != 0;
 
         NewPosition = new bool[InitialPosition.Length];
-        _initialVector = InitialPosition.ToVector3(_dimensions.Length);
+        _initialVector = InitialPosition.ToVector3(_dimensions.Length, _stretchToFit);
     }
 
     internal void SetRotation(Rotation[][] rotations)
     {
-        if (_dimensions.Length < 1)
+        if (_dimensions.Length < 3)
             throw new IndexOutOfRangeException("dimensions.Length: " + _dimensions.Length);
         if (rotations.Any(i => i.Any(j => j.Axis < 0 || (int)j.Axis >= _dimensions.Length)))
             throw new IndexOutOfRangeException("axis: " + rotations.Select(i => i.Select(j => j.IsNegative ? "-" : "+" + j.Axis).Join("")).Join(", "));
 
         for (int i = 0; i < NewPosition.Length; i++)
-            NewPosition[i] = InitialPosition[i];
+            if (_newVectorReady)
+                InitialPosition[i] = NewPosition[i];
+            else
+                NewPosition[i] = InitialPosition[i];
 
         if (rotations.Any(a => a.Length == 0))
             return;
@@ -106,7 +111,8 @@ internal class Position
             NewPosition[(int)rotations[i][rotations[i].Length - 1].Axis] = rotations[i][rotations[i].Length - 1].IsNegative ^ temp;
         }
 
-        _initialVector = InitialPosition.ToVector3(_dimensions.Length);
-        _newVector = NewPosition.ToVector3(_dimensions.Length);
+        _initialVector = InitialPosition.ToVector3(_dimensions.Length, _stretchToFit);
+        _newVector = NewPosition.ToVector3(_dimensions.Length, _stretchToFit);
+        _newVectorReady = true;
     }
 }

@@ -17,11 +17,10 @@ public class TheOctadecayottonScript : MonoBehaviour
     public string ForceRotation;
     public string ForceStartingSphere;
 
-    internal bool isUsingBounce;
+    internal bool isUsingBounce, stretchToFit, colorAssist;
     internal static int ModuleIdCounter { get; private set; }
     internal static int Activated { get; set; }
     internal int moduleId, dimensionOverride, dimension, rotation, stepRequired;
-    internal static bool stretchToFit;
     internal bool IsSolved { get; set; }
     internal bool ZenModeActive, TwitchPlaysActive;
     internal string souvenirSphere, souvenirRotations;
@@ -30,7 +29,7 @@ public class TheOctadecayottonScript : MonoBehaviour
     {
         Activated = 0;
         moduleId = ++ModuleIdCounter;
-        ModSettingsJSON.Get(this, out dimension, out rotation, out stepRequired, out isUsingBounce, out stretchToFit);
+        ModSettingsJSON.Get(this, out dimension, out rotation, out colorAssist, out isUsingBounce, out stretchToFit);
         
         ModuleSelectable.OnInteract += Interact.Init(this, true, dimension - Info.GetSolvableModuleNames().Where(i => i == "The Octadecayotton").Count());
         SubModuleSelectable.OnInteract += Interact.OnInteract(this, false, dimension - Info.GetSolvableModuleNames().Where(i => i == "The Octadecayotton").Count());
@@ -201,5 +200,8 @@ public class TheOctadecayottonScript : MonoBehaviour
                 SubModuleSelectable.OnInteract();
             }
         }
+
+        while (!IsSolved)
+            yield return true;
     }
 }

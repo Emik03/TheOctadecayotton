@@ -13,7 +13,6 @@ public class SphereScript : MonoBehaviour
 
     internal Position pos;
     internal InteractScript Interact { private get; set; }
-    internal List<Vector3> vectors = new List<Vector3>();
 
     private bool _isUpdatingValue;
 

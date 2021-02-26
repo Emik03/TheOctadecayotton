@@ -10,6 +10,7 @@ public class InteractScript : MonoBehaviour
     public GameObject Polygon, Sphere;
     public KMBombInfo Info;
     public Renderer ModuleRenderer;
+    public Shader Shader, AssistShader;
     public Texture EvilTexture, NeutralTexture;
 
     internal List<SphereScript> Spheres { get; set; }
@@ -24,9 +25,8 @@ public class InteractScript : MonoBehaviour
     internal Dictionary<Axis, bool> startingSphere = new Dictionary<Axis, bool>();
     internal static IEnumerable<Axis> allAxies = Enum.GetValues(typeof(Axis)).Cast<Axis>();
 
-    private bool _isRotationsCached;
-    private int _moduleId, _breakCount, _step, _stepRequired, _dimension;
-    private string _allAxes = Enum.GetValues(typeof(Axis)).Cast<Axis>().Join("");
+    private int _moduleId, _breakCount, _dimension;
+    private static readonly string _allAxes = Enum.GetValues(typeof(Axis)).Cast<Axis>().Join("");
     private Axis[] _order;
     private List<Axis> _inputs;
     private Dictionary<Axis, int> _axesUsed = new Dictionary<Axis, int>();
@@ -41,14 +41,11 @@ public class InteractScript : MonoBehaviour
                 return true;
 
             isStarting = true;
-            _isRotationsCached = false;
             rotationProgress = 0;
-            _step = 0;
 
             _octadecayotton = octadecayotton;
             _animate = new Animate(this, _octadecayotton);
             _moduleId = octadecayotton.moduleId;
-            _stepRequired = octadecayotton.stepRequired;
             isUsingBounce = octadecayotton.isUsingBounce;
 
             if (Dimension == 0)
@@ -148,18 +145,15 @@ public class InteractScript : MonoBehaviour
             _inputs = new List<Axis>();
         }
 
-        if (!isActive || !isRotating || (_isRotationsCached && (_step = ++_step % (Spheres[0].vectors.Count - 10)) % _stepRequired != 0))
+        if (!isActive || !isRotating)
             return;
 
-        if (!_isRotationsCached && (rotationProgress >= Rotations.Length + 0.5f || (Rotations.Length == 1 && rotationProgress > 1)))
+        if (rotationProgress >= Rotations.Length + 0.5f || (Rotations.Length == 1 && rotationProgress > 1))
         {
-            _isRotationsCached = true;
-            for (int i = 0; i < Spheres.Count; i++)
-                Spheres[i].AddVector(rotationProgress, isUsingBounce);
             rotationProgress = 0;
         }
 
-        if (rotationProgress % 1 == 0 && _step == 0)
+        if (rotationProgress % 1 == 0)
         {
             if (isSubmitting)
             {
@@ -170,21 +164,15 @@ public class InteractScript : MonoBehaviour
                 isRotating = false;
             }
 
-            if (!_isRotationsCached)
-                for (int i = 0; i < Spheres.Count && Rotations.Length != 0; i++)
-                    Spheres[i].pos.SetRotation(rotationProgress < Rotations.Length ? Rotations[(int)rotationProgress] : Rotations[0]);
+            for (int i = 0; i < Spheres.Count && Rotations.Length != 0; i++)
+                Spheres[i].pos.SetRotation(rotationProgress < Rotations.Length ? Rotations[(int)rotationProgress] : Rotations[0]);
         }
 
-        if (_isRotationsCached)
-            for (int i = 0; i < Spheres.Count; i++)
-                Spheres[i].Sphere.transform.localPosition = Spheres[i].vectors[_step];
-        else
-        {
-            for (int i = 0; i < Spheres.Count; i++)
-                Spheres[i].AddVector(rotationProgress < Rotations.Length ? rotationProgress : 0, isUsingBounce);
-            rotationProgress += 1f / (256 / _stepRequired);
-        }
+        if (rotationProgress < Rotations.Length)
+            foreach (var sphere in Spheres)
+                sphere.pos.MergeDimensions(isUsingBounce ? (rotationProgress % 1).InOutBounce() : Easing.InOutCubic(rotationProgress % 1, 0, 1, 1));
 
+        rotationProgress += 1f / 256;
     }
 
     private void CreateStartingSphere()

@@ -24,10 +24,10 @@ namespace TheOctadecayotton
         public int Rotation { get; set; }
 
         /// <summary>
-        /// The amount of steps needed for update, by default, 1.
+        /// Whether each sphere should preserve their color.
         /// </summary>
-        [JsonProperty("25FPS")]
-        public bool LowFPS { get; set; }
+        [JsonProperty("ColorAssist")]
+        public bool ColorAssist { get; set; }
 
         /// <summary>
         /// The amount of steps needed for update, by default, 1.
@@ -53,13 +53,12 @@ namespace TheOctadecayotton
         /// <param name="octadecayotton">The instance of the module.</param>
         /// <param name="dimension">The amount of dimensions.</param>
         /// <param name="rotation">The amount of rotations.</param>
-        /// <param name="stepRequired">The amount of frames required for the next step of the rotation to be displayed.</param>
-        public static void Get(TheOctadecayottonScript octadecayotton, out int dimension, out int rotation, out int stepRequired, out bool isUsingBounce, out bool stretchToFit)
+        public static void Get(TheOctadecayottonScript octadecayotton, out int dimension, out int rotation, out bool colorAssist, out bool isUsingBounce, out bool stretchToFit)
         {
             // Default values.
             dimension = 9;
             rotation = 3;
-            stepRequired = 1;
+            colorAssist = false;
             isUsingBounce = false;
             stretchToFit = false;
 
@@ -73,14 +72,14 @@ namespace TheOctadecayotton
                 {
                     dimension = Mathf.Clamp(settings.Dimension, Min, Max);
                     rotation = Mathf.Clamp(settings.Rotation, 0, 100);
-                    stepRequired = settings.LowFPS.AsInt() + 1;
+                    colorAssist = settings.ColorAssist;
                     isUsingBounce = settings.IsUsingBounce;
                     stretchToFit = settings.StretchToFit;
-                    Debug.LogFormat("[The Octadecayotton #{0}]: JSON loaded successfully, values are: (Dimensions = {1}), (Rotations = {2}), (25FPS: {3}), (InOutBounce: {4}), and (StretchToFit: {5}).",
+                    Debug.LogFormat("[The Octadecayotton #{0}]: JSON loaded successfully, values are: (Dimensions = {1}), (Rotations = {2}), (ColorAssist: {3}), (InOutBounce: {4}), and (StretchToFit: {5}).",
                         octadecayotton.moduleId,
                         dimension,
                         rotation,
-                        settings.LowFPS,
+                        colorAssist,
                         isUsingBounce,
                         stretchToFit);
                 }

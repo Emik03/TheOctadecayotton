@@ -523,6 +523,8 @@ MonoBehaviour:
   Sphere: {fileID: 1466129040490230}
   Info: {fileID: 114676204725116032}
   ModuleRenderer: {fileID: 23207088507418742}
+  Shader: {fileID: 4800000, guid: 69331800da5b7074a83030d9fedfb798, type: 3}
+  AssistShader: {fileID: 4800000, guid: 8fe67c250f673674993451d288eabfcd, type: 3}
   EvilTexture: {fileID: 2800000, guid: 5c3c51fba0d35b54eba76c2d2effcb79, type: 3}
   NeutralTexture: {fileID: 2800000, guid: b7685f0652736644fb58059655eb7bd3, type: 3}
 --- !u!114 &114466871040107044
